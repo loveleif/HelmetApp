@@ -21,6 +21,7 @@
         </activity>
         <activity android:name="StartStopActivity"></activity>
         <activity android:name="SettingsActivity"></activity>
+        <activity android:name="EmergencyContactsActivity"></activity>
     </application>
 
 </manifest>

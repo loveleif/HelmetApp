@@ -33,6 +33,12 @@ public class HelmetAppActivity extends TabActivity {
                           res.getDrawable(R.drawable.ic_tab_settings))
                       .setContent(intent);
         tabHost.addTab(spec);
+        
+        intent = new Intent().setClass(this, EmergencyContactsActivity.class);
+        spec = tabHost.newTabSpec("Emergency Contacts").setIndicator("Emergency Contacts",
+                          res.getDrawable(R.drawable.ic_tab_emergency_contacts))
+                      .setContent(intent);
+        tabHost.addTab(spec);
 
         tabHost.setCurrentTab(1);
         
