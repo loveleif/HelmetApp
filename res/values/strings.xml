@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, HelmetAppActivity!</string>
     <string name="app_name">HelmetApp</string>
+    <string name="onOffLabel">On/Off button</string>
 
 </resources>
