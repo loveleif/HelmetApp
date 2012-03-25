@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ <PreferenceCategory
+   android:summary="Accident alarm preferences"
+   android:title="Alarm" >
+  <EditTextPreference 
+     android:key="alarmDelay"
+     android:title="Alarm Delay"
+     android:summary="Please enter the delay, in seconds, between an accident and sending the alarm"
+     android:numeric="integer"
+     android:maxLength="3"/>
+  
+  <EditTextPreference
+     android:key="alarmProfile"
+     android:title="Profile"
+     android:summary="Please select the alarm profile" />
+ </PreferenceCategory>
+
+  <PreferenceCategory
+   android:summary="Application server settings"
+   android:title="Server" >
+  <EditTextPreference 
+     android:key="serverUser"
+     android:title="User Name"
+     android:summary="Please enter your user name" />
+  <EditTextPreference 
+     android:key="serverPassword"
+     android:title="Password"
+     android:summary="Please enter your password"
+     android:password="true" />
+ </PreferenceCategory>
+ 
+ <PreferenceCategory
+   android:summary="Accererometer data settings"
+   android:title="Accelerometer" >
+  <CheckBoxPreference
+     android:key="accLoggingEnabled"
+     android:title="Log Accelerometer Data"
+     android:summary="Check to enable accelerometer data logging" />
+  <EditTextPreference
+     android:key="accSampleFreq"
+     android:title="Sampling Frequency"
+     android:summary="Please enter the sampling frequency of accelerometer data" />
+ </PreferenceCategory>
+ 
+  <PreferenceCategory
+   android:summary="Positioning Settings"
+   android:title="Position" >
+  <CheckBoxPreference
+     android:key="posLoggingEnables"
+     android:title="Log Position Data"
+     android:summary="Check to enable position data logging" />
+  <EditTextPreference
+     android:key="posMinDist"
+     android:title="Minimum Distance"
+     android:summary="Please enter the minimum distance between each distance data point" />
+    <EditTextPreference
+     android:key="posMinTime"
+     android:title="Minimum Time"
+     android:summary="Please enter the minimum time between each distance data point" />
+ </PreferenceCategory>
+ 
+</PreferenceScreen>

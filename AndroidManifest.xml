@@ -23,6 +23,7 @@
         <activity android:name="StartStopActivity"></activity>
         <activity android:name="SettingsActivity"></activity>
         <activity android:name="EmergencyContactsActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
