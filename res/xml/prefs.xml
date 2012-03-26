@@ -5,15 +5,15 @@
    android:title="Alarm" >
   <EditTextPreference 
      android:key="alarmDelay"
-     android:title="Alarm Delay"
-     android:summary="Please enter the delay, in seconds, between an accident and sending the alarm"
+     android:title="@string/alarm_delay_title"
+     android:summary="@string/alarm_delay_summary"
      android:numeric="integer"
      android:maxLength="3"/>
   
   <EditTextPreference
      android:key="alarmProfile"
-     android:title="Profile"
-     android:summary="Please select the alarm profile" />
+     android:title="@string/alarm_profile_title"
+     android:summary="@string/alarm_profile_summary" />
  </PreferenceCategory>
 
   <PreferenceCategory
@@ -21,12 +21,12 @@
    android:title="Server" >
   <EditTextPreference 
      android:key="serverUser"
-     android:title="User Name"
-     android:summary="Please enter your user name" />
+     android:title="@string/server_user_title"
+     android:summary="@string/server_user_summary" />
   <EditTextPreference 
      android:key="serverPassword"
-     android:title="Password"
-     android:summary="Please enter your password"
+     android:title="@string/server_password_title"
+     android:summary="@string/server_password_summary"
      android:password="true" />
  </PreferenceCategory>
  
@@ -35,12 +35,12 @@
    android:title="Accelerometer" >
   <CheckBoxPreference
      android:key="accLoggingEnabled"
-     android:title="Log Accelerometer Data"
-     android:summary="Check to enable accelerometer data logging" />
+     android:title="@string/acc_logging_enabled_title"
+     android:summary="@string/acc_logging_enabled_summary" />
   <EditTextPreference
      android:key="accSampleFreq"
-     android:title="Sampling Frequency"
-     android:summary="Please enter the sampling frequency of accelerometer data" />
+     android:title="@string/acc_sampling_freq_title"
+     android:summary="@string/acc_sampling_freq_summary" />
  </PreferenceCategory>
  
   <PreferenceCategory
@@ -48,16 +48,16 @@
    android:title="Position" >
   <CheckBoxPreference
      android:key="posLoggingEnables"
-     android:title="Log Position Data"
-     android:summary="Check to enable position data logging" />
+     android:title="@string/pos_logging_enabled_title"
+     android:summary="@string/pos_logging_enabled_summary" />
   <EditTextPreference
      android:key="posMinDist"
-     android:title="Minimum Distance"
-     android:summary="Please enter the minimum distance between each distance data point" />
+     android:title="@string/pos_min_dist_title"
+     android:summary="@string/pos_min_dist_summary" />
     <EditTextPreference
      android:key="posMinTime"
-     android:title="Minimum Time"
-     android:summary="Please enter the minimum time between each distance data point" />
+     android:title="@string/pos_min_time_title"
+     android:summary="@string/acc_logging_enabled_summary" />
  </PreferenceCategory>
  
 </PreferenceScreen>
