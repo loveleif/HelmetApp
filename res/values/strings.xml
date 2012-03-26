@@ -4,5 +4,23 @@
     <string name="hello">Hello World, HelmetAppActivity!</string>
     <string name="app_name">HelmetApp</string>
     <string name="onOffLabel">On/Off button</string>
+    <string name="alarm_delay_title">Alarm Delay</string>
+    <string name="alarm_delay_summary">Please enter the delay, in seconds, between an accident and sending the alarm</string>
+    <string name="alarm_profile_title">Alarm Profile</string>
+    <string name="alarm_profile_summary">Please set the profile of your device</string>
+    <string name="server_user_title">User Name</string>
+    <string name="server_user_summary">Please enter your user name</string>
+    <string name="server_password_title">Server Password</string>
+    <string name="server_password_summary">Please enter your server password</string>
+    <string name="acc_logging_enabled_title">Log Accelerometer Data</string>
+    <string name="acc_logging_enabled_summary">Check to enable accelerometer data logging</string>
+    <string name="acc_sampling_freq_title">Sampling Frequency</string>
+    <string name="acc_sampling_freq_summary">Please enter the sampling frequency of accelerometer data</string>
+    <string name="pos_logging_enabled_title">Log Position Data</string>
+    <string name="pos_logging_enabled_summary">Check to enable position data logging</string>
+    <string name="pos_min_dist_title">Minimum Distance</string>
+    <string name="pos_min_dist_summary">Please enter the minimum distance in meters between each position data point</string>
+    <string name="pos_min_time_title">Minimum Time</string>
+    <string name="pos_min_time_summary">Please enter the minimum time between each distance data point</string>
 
 </resources>
