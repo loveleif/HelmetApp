@@ -4,30 +4,31 @@
     android:layout_height="match_parent" >
 
     <ToggleButton
-        android:id="@+id/toggleButton1"
+        android:id="@+id/alarmToggleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="ToggleButton" />
+        android:textOn="@string/alarm_toggle_btn_on"
+        android:textOff="@string/alarm_toggle_btn_off"/>
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/labelOnOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/toggleButton1"
+        android:layout_alignBottom="@+id/alarmToggleBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/onOffLabel"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/labelOnOffStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBottom="@+id/alarmToggleBtn"
         android:layout_alignParentLeft="true"
-        android:text="Small Text"
+        android:text="@string/on_off_status_default"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

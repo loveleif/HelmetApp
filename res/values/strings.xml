@@ -22,5 +22,8 @@
     <string name="pos_min_dist_summary">Please enter the minimum distance in meters between each position data point</string>
     <string name="pos_min_time_title">Minimum Time</string>
     <string name="pos_min_time_summary">Please enter the minimum time between each distance data point</string>
+    <string name="alarm_toggle_btn_on">Alarm ON</string>
+    <string name="alarm_toggle_btn_off">Alarm OFF</string>
+    <string name="on_off_status_default">Status</string>
 
 </resources>
