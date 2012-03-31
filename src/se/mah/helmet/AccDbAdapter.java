@@ -106,7 +106,7 @@ public class AccDbAdapter {
 	 * @return the row ID of the newly inserted row, or -1 if an error occurred
 	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
 	 */
-	public long insertLocation(String time, double accX, double accY,
+	public long insertData(String time, double accX, double accY,
 			double accZ) {
 		ContentValues values = new ContentValues(4);
 		values.put(KEY_TIME, time);
