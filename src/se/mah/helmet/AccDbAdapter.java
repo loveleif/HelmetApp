@@ -97,6 +97,7 @@ public class AccDbAdapter {
 	}
 
 	/**
+	 * Old insertion method, less effective.
 	 * Insert accelerometer data to database.
 	 * 
 	 * @param time
@@ -105,7 +106,7 @@ public class AccDbAdapter {
 	 * @param accZ
 	 * @return the row ID of the newly inserted row, or -1 if an error occurred
 	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
-	 */
+	 *
 	public long insertData(String time, double accX, double accY,
 			double accZ) {
 		ContentValues values = new ContentValues(4);
@@ -115,5 +116,22 @@ public class AccDbAdapter {
 		values.put(KEY_ACCZ, accZ);
 
 		return mDb.insert(TABLE_ACC, null, values);
+	}
+	*/
+	
+	/**
+	 * Insert accelerometer data to database.
+	 * 
+	 * @param time
+	 * @param accX
+	 * @param accY
+	 * @param accZ
+	 */
+	public void insertData(String time, double accX, double accY, double accZ) {
+		mDb.execSQL(
+			"INSERT INTO " + TABLE_ACC +
+			" (" + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
+			" VALUES " +
+			" (\"" + time + "\"," + accX + "," + accY + "," + accZ + ");");
 	}
 }
