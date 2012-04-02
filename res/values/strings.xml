@@ -25,5 +25,15 @@
     <string name="alarm_toggle_btn_on">Alarm ON</string>
     <string name="alarm_toggle_btn_off">Alarm OFF</string>
     <string name="on_off_status_default">Status</string>
+    <string name="alarm_prefcat_title">Alarm</string>
+    <string name="alarm_prefcat_summary">Accident alarm preferences</string>
+    <string name="server_prefcat_title">Server</string>
+    <string name="server_prefcat_summary">Application server settings</string>
+    <string name="server_adress_title">Server Adress</string>
+    <string name="server_adress_summary">The IP adress or domain name of the server</string>
+    <string name="accelerometer_prefcat_title">Accelerometer</string>
+    <string name="accelerometer_prefcat_summary">Accererometer data settings</string>
+    <string name="position_prefcat_title">Position</string>
+    <string name="position_prefcat_summary">Settings of the positioning system</string>
 
 </resources>
