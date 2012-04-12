@@ -4,6 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+/**
+ * This Service class handles the bluetooth interface to the embedded system.
+ * 
+ * @author Kristofer Leifland
+ *
+ */
 public class BluetoothService extends Service {
 
 	@Override
