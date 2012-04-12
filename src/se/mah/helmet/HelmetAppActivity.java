@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TabHost;
 
 public class HelmetAppActivity extends TabActivity {
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
