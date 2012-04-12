@@ -84,14 +84,12 @@ public class BluetoothService extends Service {
 	 */
 	public void connectionFailed() {
 		// TODO Auto-generated method stub
-		Log.e(TAG, "Failed to connect BluetoothDevice.");
 	}
 
 	/**
 	 * This method is run when the bluetooth connection is lost.
 	 */
-	public void connectionLost(BluetoothDevice lostDevice) {
-		Log.e(TAG, "Bluetooth connection lost.");
+	public void connectionLost(BluetoothDevice lostDevice) {		
 		try {
 			// Sleep before reconnect to save battery
 			Thread.sleep(5000);
@@ -132,6 +130,7 @@ public class BluetoothService extends Service {
 
 		@Override
 		public void run() {
+			Log.e(TAG, "Connecting to BluetoothDevice...");
 			setName("BluetoothConnectThread");
 
 			// Always cancel discovery because it will slow down a connection
