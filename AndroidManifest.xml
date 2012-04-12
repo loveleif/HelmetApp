@@ -24,6 +24,7 @@
         <activity android:name="SettingsActivity"></activity>
         <activity android:name="EmergencyContactsActivity"></activity>
         <activity android:name=".SettingsActivity"></activity>
+        <service android:name="BluetoothService"></service>
     </application>
 
 </manifest>
