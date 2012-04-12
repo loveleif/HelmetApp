@@ -107,6 +107,13 @@ public class BluetoothService extends Service {
 		return null;
 	}
 
+	/**
+	 * Thread for establishing a connection to a BluetoothDevice.
+	 * 
+	 * @author Fredrik Andersson
+	 * @author Kristofer Leifland
+	 * 
+	 */
 	private class ConnectThread extends Thread {
 		private final BluetoothDevice device;
 		private final BluetoothSocket socket;
