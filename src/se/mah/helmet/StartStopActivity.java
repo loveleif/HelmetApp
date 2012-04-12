@@ -20,9 +20,9 @@ public class StartStopActivity extends Activity {
 		
 		setContentView(R.layout.on_off);
 		
-		onOff = (ToggleButton) findViewById(R.id.toggleButton1);
+		onOff = (ToggleButton) findViewById(R.id.alarmToggleBtn);
 		onOff.setOnClickListener(new OnOffListener());
-		txtvStatus = (TextView) findViewById(R.id.textView2);
+		txtvStatus = (TextView) findViewById(R.id.labelOnOffStatus);
 	}
 	
     private class OnOffListener implements OnClickListener {

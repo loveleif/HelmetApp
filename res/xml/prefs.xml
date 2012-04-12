@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
  <PreferenceCategory
-   android:summary="Accident alarm preferences"
-   android:title="Alarm" >
+   android:summary="@string/alarm_prefcat_summary"
+   android:title="@string/alarm_prefcat_title" >
   <EditTextPreference 
      android:key="alarmDelay"
      android:title="@string/alarm_delay_title"
@@ -17,8 +17,8 @@
  </PreferenceCategory>
 
   <PreferenceCategory
-   android:summary="Application server settings"
-   android:title="Server" >
+   android:summary="@string/server_prefcat_summary"
+   android:title="@string/server_prefcat_title" >
   <EditTextPreference 
      android:key="serverUser"
      android:title="@string/server_user_title"
@@ -28,11 +28,12 @@
      android:title="@string/server_password_title"
      android:summary="@string/server_password_summary"
      android:password="true" />
+  <EditTextPreference android:key="serverAdress" android:summary="@string/server_adress_summary" android:title="@string/server_adress_title"/>
  </PreferenceCategory>
  
  <PreferenceCategory
-   android:summary="Accererometer data settings"
-   android:title="Accelerometer" >
+   android:summary="@string/accelerometer_prefcat_summary"
+   android:title="@string/accelerometer_prefcat_title" >
   <CheckBoxPreference
      android:key="accLoggingEnabled"
      android:title="@string/acc_logging_enabled_title"
@@ -44,8 +45,8 @@
  </PreferenceCategory>
  
   <PreferenceCategory
-   android:summary="Positioning Settings"
-   android:title="Position" >
+   android:summary="@string/position_prefcat_summary"
+   android:title="@string/position_prefcat_title" >
   <CheckBoxPreference
      android:key="posLoggingEnables"
      android:title="@string/pos_logging_enabled_title"
