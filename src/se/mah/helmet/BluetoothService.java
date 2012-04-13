@@ -19,9 +19,6 @@ import android.util.Log;
  * This class is heavily influenced by sample code from android.google.com, see
  * http://developer.android.com/resources/samples/BluetoothChat
  * 
- * @author Kristofer Leifland
- * @author Fredrik Andersson
- * 
  */
 public class BluetoothService extends Service {
 	private static final String TAG = BluetoothService.class.getSimpleName();
@@ -108,9 +105,6 @@ public class BluetoothService extends Service {
 	/**
 	 * Thread for establishing a connection to a BluetoothDevice.
 	 * 
-	 * @author Fredrik Andersson
-	 * @author Kristofer Leifland
-	 * 
 	 */
 	private class ConnectThread extends Thread {
 		private final BluetoothDevice device;
@@ -163,9 +157,6 @@ public class BluetoothService extends Service {
 
 	/**
 	 * Thread for managing input and output from a BluetoothSocket.
-	 * 
-	 * @author Fredrik Andersson
-	 * @author Kristofer Leifland
 	 * 
 	 */
 	private class ConnectedThread extends Thread {
