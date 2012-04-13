@@ -196,13 +196,15 @@ public class BluetoothService extends Service {
 		public void run() {
 			byte[] buffer = new byte[bufferSize];
 			int size;
-			String data = "";
+			String data;
 
 			while (true) {
 				try {
+					// Read data
 					size = input.read(buffer);
 
 					// TODO Hantera data, temporär lösning nedan
+					data = "";
 					for (int i = 0; i < size; ++i)
 						data += buffer[i];
 					Log.d(TAG, "Read data from Bluetooth device: " + data);
