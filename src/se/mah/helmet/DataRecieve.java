@@ -1,12 +1,16 @@
 package se.mah.helmet;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.content.Context;
+import android.telephony.SmsManager;
 
 public class DataRecieve {	
 	public static final int RECIEVE_FAIL = -1;
@@ -55,7 +59,9 @@ public class DataRecieve {
 	private int handleAlarm(JSONObject obj) {
 		// TODO Spara severity
 		// TODO Skicka larm till server
+		// Se http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
 		// TODO Smsa kontakter
+		// SmsManager.getDefault().sendTextMessage(destinationAddress, scAddress, text, sentIntent, deliveryIntent);
 		return RECIEVE_OK;
 	}
 }

@@ -42,9 +42,7 @@ public class BluetoothService extends Service {
 	private static final int STATE_ON = 2;
 	
 	private static final byte END_OF_TRANSMISSION = 4;
-	
-	
-	
+		
 	public BluetoothService() {
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		state = STATE_OFF;
