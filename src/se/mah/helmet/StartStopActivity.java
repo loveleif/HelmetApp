@@ -42,11 +42,12 @@ public class StartStopActivity extends Activity {
     			Log.d(TAG, "About to start accident detection.");
     			Toast.makeText(getApplicationContext(), "Connecting to device...", Toast.LENGTH_SHORT).show();
     			// TODO Tillfällig lösning för att testa. Skriv in MAC-adressen manuellt.
-    			bs.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice("MAC-adress"));
+    			bs.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice("00:06:66:04:DC:0C"));
     			txtvStatus.setText("Status: Connected");
     		} else {
     			Log.d(TAG, "About to stop accident detection.");
     			Toast.makeText(getApplicationContext(), "Disconnecting from device.", Toast.LENGTH_SHORT).show();
+    			bs.disconnect();
     			txtvStatus.setText("Status: Disconnected");
     		}
     	}

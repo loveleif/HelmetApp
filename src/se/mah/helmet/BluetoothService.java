@@ -33,21 +33,19 @@ public class BluetoothService extends Service {
 	// Buffer size for the bluetooth input
 	private static final int BUFFER_SIZE = 1024;
 
+	private int state;
+	private static final int STATE_OFF = 1;
+	private static final int STATE_ON = 2;
+	
+	
+	
 	public BluetoothService() {
 		adapter = BluetoothAdapter.getDefaultAdapter();
+		state = STATE_OFF;
 	}
 
 	public synchronized void connect(BluetoothDevice device) {
-		// Cancel any ongoing connection attemps
-		if (connectThread != null) {
-			connectThread.cancel();
-			connectThread = null;
-		}
-		// Cancel any established connections
-		if (connectedThread != null) {
-			connectedThread.cancel();
-			connectedThread = null;
-		}
+		disconnect();
 
 		connectThread = new ConnectThread(device);
 		connectThread.start();
@@ -73,6 +71,7 @@ public class BluetoothService extends Service {
 		}
 
 		connectedThread = new ConnectedThread(socket, BUFFER_SIZE);
+		state = STATE_ON;
 		connectedThread.start();
 	}
 	
@@ -87,6 +86,9 @@ public class BluetoothService extends Service {
 	 * This method is run when the bluetooth connection is lost.
 	 */
 	public void connectionLost(BluetoothDevice lostDevice) {		
+		if (state == STATE_OFF)
+			return;
+		
 		try {
 			// Sleep before reconnect to save battery
 			Thread.sleep(5000);
@@ -94,6 +96,21 @@ public class BluetoothService extends Service {
 		
 		// Try reconnecting
 		connect(lostDevice);
+	}
+	
+	public void disconnect() {
+		state = STATE_OFF;
+		
+		// Cancel any ongoing connection attemps
+		if (connectThread != null) {
+			connectThread.cancel();
+			connectThread = null;
+		}
+		// Cancel any established connections
+		if (connectedThread != null) {
+			connectedThread.cancel();
+			connectedThread = null;
+		}
 	}
 	
 	@Override
@@ -195,9 +212,7 @@ public class BluetoothService extends Service {
 					size = input.read(buffer);
 
 					// TODO Hantera data, temporär lösning nedan
-					data = "";
-					for (int i = 0; i < size; ++i)
-						data += buffer[i];
+					data = new String(buffer, 0, size);
 					Log.d(TAG, "Read data from Bluetooth device: " + data);
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
