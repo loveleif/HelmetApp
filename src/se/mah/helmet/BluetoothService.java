@@ -1,8 +1,12 @@
 package se.mah.helmet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.CharBuffer;
 import java.util.UUID;
 
 import android.app.Service;
@@ -36,6 +40,8 @@ public class BluetoothService extends Service {
 	private int state;
 	private static final int STATE_OFF = 1;
 	private static final int STATE_ON = 2;
+	
+	private static final byte END_OF_TRANSMISSION = 4;
 	
 	
 	
@@ -203,17 +209,23 @@ public class BluetoothService extends Service {
 		@Override
 		public void run() {
 			byte[] buffer = new byte[bufferSize];
-			int size;
+			int size = 0;
 			String data;
-
+			int offset = 0;
+			
 			while (true) {
 				try {
-					// Read data
-					size = input.read(buffer);
+					// Read from input to buffer until last byte is END_OF_TRANSMISSION
+					offset = 0;
+					do {
+						size = input.read(buffer, offset, buffer.length - offset);
+						if (size > 0)
+							offset += size;
+					} while (buffer[offset - 1] != END_OF_TRANSMISSION);
 
-					// TODO Hantera data, temporär lösning nedan
-					data = new String(buffer, 0, size);
-					Log.d(TAG, "Read data from Bluetooth device: " + data);
+					// Temp hantering
+					data = new String(buffer, 0, offset - 1);
+					Log.d(TAG, "BT Data: " + data);
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());
