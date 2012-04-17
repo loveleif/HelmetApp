@@ -1,5 +1,6 @@
 package se.mah.helmet;
 
+import se.mah.helmet.storage.ContactsDbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;

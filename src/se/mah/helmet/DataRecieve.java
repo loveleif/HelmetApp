@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import se.mah.helmet.entity.Contact;
+import se.mah.helmet.storage.AccDbAdapter;
+import se.mah.helmet.storage.ContactsDbAdapter;
 import android.content.Context;
 import android.telephony.SmsManager;
 import android.util.Log;

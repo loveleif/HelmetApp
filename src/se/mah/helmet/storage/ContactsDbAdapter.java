@@ -1,4 +1,4 @@
-package se.mah.helmet;
+package se.mah.helmet.storage;
 
 import java.util.ArrayList;
 import java.util.List;

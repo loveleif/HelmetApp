@@ -1,4 +1,4 @@
-package se.mah.helmet;
+package se.mah.helmet.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
