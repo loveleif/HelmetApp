@@ -26,7 +26,7 @@ public class StartStopActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		bs = new BluetoothService();
+		bs = new BluetoothService(getApplicationContext());
 		
 		setContentView(R.layout.on_off);
 		

@@ -13,6 +13,7 @@ import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class BluetoothService extends Service {
 	private final BluetoothAdapter adapter;
 	private ConnectThread connectThread;
 	private ConnectedThread connectedThread;
+	private final Context context;
 	// The "well known SPP UUID", kanske inte stämmer
 	private static final UUID MY_UUID = UUID
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -43,7 +45,8 @@ public class BluetoothService extends Service {
 	
 	private static final byte END_OF_TRANSMISSION = 4;
 		
-	public BluetoothService() {
+	public BluetoothService(Context context) {
+		this.context = context;
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		state = STATE_OFF;
 	}
