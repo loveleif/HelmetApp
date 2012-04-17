@@ -40,6 +40,8 @@ public class BluetoothService extends Service {
 	private static final int BUFFER_SIZE = 1024;
 
 	private int state;
+
+	private DataRecieve dataRecieve;
 	private static final int STATE_OFF = 1;
 	private static final int STATE_ON = 2;
 	
@@ -49,6 +51,7 @@ public class BluetoothService extends Service {
 		this.context = context;
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		state = STATE_OFF;
+		dataRecieve = new DataRecieve(context);
 	}
 
 	public synchronized void connect(BluetoothDevice device) {
@@ -227,6 +230,7 @@ public class BluetoothService extends Service {
 					// Temp hantering
 					data = new String(buffer, 0, offset - 1);
 					Log.d(TAG, "BT Data: " + data);
+					Log.d(TAG, "DataRecieve: " + dataRecieve.recieve(data));
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());

@@ -30,5 +30,16 @@
         android:layout_alignParentLeft="true"
         android:text="@string/on_off_status_default"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/testtw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labelOnOff"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="75dp"
+        android:layout_toRightOf="@+id/labelOnOffStatus"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

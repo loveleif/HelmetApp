@@ -26,8 +26,10 @@
         <activity android:name="StartStopActivity"></activity>
         <activity android:name="SettingsActivity"></activity>
         <activity android:name="EmergencyContactsActivity"></activity>
+        <activity android:name="ContactEdit"></activity>
         <activity android:name=".SettingsActivity"></activity>
-        <service android:name="BluetoothService"></service>
+        <service android:name="BluetoothService">
+        </service>
     </application>
 
 </manifest>
