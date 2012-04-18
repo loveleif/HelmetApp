@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * Provides a common SQLiteOpenHelper for all database adapters using the helmet_db database.
+ *
+ */
 public abstract class DbAdapter {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 	
