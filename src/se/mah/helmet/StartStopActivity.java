@@ -2,12 +2,14 @@ package se.mah.helmet;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -33,8 +35,14 @@ public class StartStopActivity extends Activity {
 		setContentView(R.layout.on_off);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		TextView testv = (TextView) findViewById(R.id.testtw);
-		testv.setText(prefs.getString("serverUser", "---"));
+		
+		Button btnTest = (Button) findViewById(R.id.btnTest);
+		btnTest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		Intent intent = new Intent(getApplicationContext(), AlarmAcknowledgeActivity.class);
+        	    startActivityForResult(intent, 45);
+            }
+        });
 		
 		onOff = (ToggleButton) findViewById(R.id.alarmToggleBtn);
 		onOff.setOnClickListener(new OnOffListener());
