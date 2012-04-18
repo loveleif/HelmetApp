@@ -14,8 +14,8 @@ import android.util.Log;
 public class AccDbAdapter {
 	// TODO Implement syncing features with server.
 
-	private static final String DB_NAME = "helmet_db";
-	private static final int DB_VERSION = 1;
+	public static final String DB_NAME = "helmet_db";
+	public static final int DB_VERSION = 1;
 
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 
@@ -23,12 +23,12 @@ public class AccDbAdapter {
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
 
-	private static final String TABLE_ACC = "acc";
-	private static final String KEY_ROWID = "_id";
-	private static final String KEY_TIME = "time";
-	private static final String KEY_ACCX = "acc_x";
-	private static final String KEY_ACCY = "acc_y";
-	private static final String KEY_ACCZ = "acc_z";
+	public static final String TABLE_ACC = "acc";
+	public static final String KEY_ROWID = "_id";
+	public static final String KEY_TIME = "time";
+	public static final String KEY_ACCX = "acc_x";
+	public static final String KEY_ACCY = "acc_y";
+	public static final String KEY_ACCZ = "acc_z";
 	private static final String TABLE_ACC_CREATE = 
 			"CREATE TABLE " + TABLE_ACC	+ "(" 
 			+ KEY_ROWID + " integer primary key autoincrement, "
