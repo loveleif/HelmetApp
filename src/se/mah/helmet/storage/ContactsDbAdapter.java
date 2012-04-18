@@ -112,7 +112,6 @@ public class ContactsDbAdapter {
 		Cursor cursor = fetchAllContactsCursor();
 		int colIdxName = cursor.getColumnIndex(KEY_NAME);
 		int colIdxPhone = cursor.getColumnIndex(KEY_PHONE);
-		Log.d("-", "cursor size " + cursor.getCount());
 		
 		while (cursor.moveToNext()) {
 			contacts.add(new Contact(
