@@ -1,5 +1,6 @@
 package se.mah.helmet;
 
+import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
@@ -39,6 +40,7 @@ public class ContactEdit extends Activity {
 				rowId = extras.getLong(ContactDbAdapter.KEY_ROWID);
 		}
 
+		
 		populateFields();
 
 		Button confirmButton = (Button) findViewById(R.id.btnConfirmContactEdit);
@@ -55,12 +57,9 @@ public class ContactEdit extends Activity {
 		if (rowId == null)
 			return;
 
-		Cursor note = dbHelper.fetchContact(rowId);
-		startManagingCursor(note);
-		name.setText(note.getString(note
-				.getColumnIndexOrThrow(ContactDbAdapter.KEY_NAME)));
-		phoneNbr.setText(note.getString(note
-				.getColumnIndexOrThrow(ContactDbAdapter.KEY_PHONE)));
+		Contact contact = dbHelper.getObject(rowId);
+		name.setText(contact.getName());
+		phoneNbr.setText(contact.getPhoneNbr());
 	}
 
 	@Override

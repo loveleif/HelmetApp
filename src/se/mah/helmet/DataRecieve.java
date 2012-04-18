@@ -85,7 +85,7 @@ public class DataRecieve extends Activity {
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
 		
-		for (Contact contact : contactDb.fetchAllContacts()) {
+		for (Contact contact : contactDb.getAllObjects()) {
 			// VARNING! Kommentera denna raden efter varje test
 			/*SmsManager.getDefault().sendTextMessage(
 					contact.getPhoneNbr(), 

@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-public class TripDbAdapter extends DbAdapter {
+public class TripDbAdapter extends DbAdapter<Trip> {
 	private static final String TAG = TripDbAdapter.class.getSimpleName();
 
 	public static final String TABLE_TRIP = "trips";
@@ -79,5 +79,12 @@ public class TripDbAdapter extends DbAdapter {
 	@Override
 	public String getPrimaryKeyColumnName() {
 		return KEY_ROWID;
+	}
+
+	@Override
+	public Trip getObject(Cursor cursor) {
+		return new Trip(
+			cursor.getLong(cursor.getColumnIndex(KEY_ROWID)),
+			cursor.getString(cursor.getColumnIndex(KEY_NAME)));
 	}
 }

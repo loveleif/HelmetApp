@@ -36,7 +36,7 @@ public class EmergencyContactsActivity extends ListActivity {
 	}
 
 	private void fillData() {
-		Cursor cursor = dbHelper.fetchAllContactsCursor();
+		Cursor cursor = dbHelper.getAll();
 		startManagingCursor(cursor);
 
 		// Create an array to specify the fields we want to display in the list
@@ -83,7 +83,7 @@ public class EmergencyContactsActivity extends ListActivity {
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 					.getMenuInfo();
-			dbHelper.deleteContact(info.id);
+			dbHelper.delete(info.id);
 			fillData();
 			return true;
 		}

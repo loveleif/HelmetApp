@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 
-public class LocDbAdapter extends DbAdapter {
+public class LocDbAdapter extends DbAdapter<Location> {
 	private static final String TAG = LocDbAdapter.class.getSimpleName();
 
 	public static final String TABLE_LOC = "loc";
@@ -59,25 +59,6 @@ public class LocDbAdapter extends DbAdapter {
 		return getDb().insert(TABLE_LOC, null, values);
 	}
 	
-	/**
-	 * Returns the last Location from the database.
-	 * 
-	 * @return last location
-	 */
-	public Location getLastLocation() {
-		Cursor cursor = getDb().query(TABLE_LOC, null, null, null, null, null, KEY_ROWID + " desc", "1");
-		cursor.moveToFirst();
-		Location loc = new Location(cursor.getString(cursor.getColumnIndex(KEY_PROVIDER)));
-		loc.setAccuracy(cursor.getFloat(cursor.getColumnIndex(KEY_ACCURACY)));
-		loc.setAltitude(cursor.getFloat(cursor.getColumnIndex(KEY_ALT)));
-		loc.setBearing(cursor.getFloat(cursor.getColumnIndex(KEY_BEARING)));
-		loc.setLongitude(cursor.getFloat(cursor.getColumnIndex(KEY_LONG)));
-		loc.setLatitude(cursor.getFloat(cursor.getColumnIndex(KEY_LAT)));
-		loc.setSpeed(cursor.getFloat(cursor.getColumnIndex(KEY_SPEED)));
-		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));		
-		return loc;
-	}
-
 	@Override
 	public String getTableName() {
 		return TABLE_LOC;
@@ -86,5 +67,18 @@ public class LocDbAdapter extends DbAdapter {
 	@Override
 	public String getPrimaryKeyColumnName() {
 		return KEY_ROWID;
+	}
+
+	@Override
+	public Location getObject(Cursor cursor) {
+		Location loc = new Location(cursor.getString(cursor.getColumnIndex(KEY_PROVIDER)));
+		loc.setAccuracy(cursor.getFloat(cursor.getColumnIndex(KEY_ACCURACY)));
+		loc.setAltitude(cursor.getFloat(cursor.getColumnIndex(KEY_ALT)));
+		loc.setBearing(cursor.getFloat(cursor.getColumnIndex(KEY_BEARING)));
+		loc.setLongitude(cursor.getFloat(cursor.getColumnIndex(KEY_LONG)));
+		loc.setLatitude(cursor.getFloat(cursor.getColumnIndex(KEY_LAT)));
+		loc.setSpeed(cursor.getFloat(cursor.getColumnIndex(KEY_SPEED)));
+		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));
+		return loc;
 	}
 }

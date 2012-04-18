@@ -1,11 +1,14 @@
 package se.mah.helmet.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import se.mah.helmet.entity.Contact;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
 import android.util.Log;
 
 /**
@@ -13,7 +16,7 @@ import android.util.Log;
  * helmet_db database.
  * 
  */
-public abstract class DbAdapter {
+public abstract class DbAdapter<T> {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 
 	private static final String DB_NAME = "helmet_db";
@@ -99,7 +102,7 @@ public abstract class DbAdapter {
 	public abstract String getPrimaryKeyColumnName();
 
 	/**
-	 * Returns the last id from the database.
+	 * Returns the last id from the table.
 	 * 
 	 * @return last location
 	 */
@@ -109,5 +112,66 @@ public abstract class DbAdapter {
 				getPrimaryKeyColumnName() + " desc", "1");
 		cursor.moveToFirst();
 		return cursor.getLong(0);
+	}
+
+	/**
+	 * Returns object representation of the row that the specified Cursor points
+	 * at. The Cursor must carry all columns.
+	 * 
+	 * @param cursor
+	 * @return
+	 */
+	public abstract T getObject(Cursor cursor);
+
+	public T getObject(long id) {
+		return getObject(get(id));
+	}
+
+	public Cursor get(long id) {
+		Cursor cursor = getDb().query(true, getTableName(), null, null, null,
+									  null, null, null, null);
+		if (cursor != null)
+			cursor.moveToFirst();
+		
+		return cursor;
+	}
+
+	/**
+	 * Returns Cursor with all rows since the specified id. The Cursor carries
+	 * all columns.
+	 * 
+	 * @param sinceThisId
+	 *            row id
+	 * @param limit
+	 *            limit number of records
+	 * @return all rows since the specified id
+	 */
+	public Cursor getAllSinceId(long sinceThisId, String limit) {
+		return getDb().query(getTableName(), null,
+				getPrimaryKeyColumnName() + ">" + sinceThisId, null, null,
+				null, null, limit);
+	}
+
+	public List<T> getAllObjects() {
+		Cursor cursor = getAll();
+		List<T> list = new ArrayList<T>(cursor.getCount());
+		while (cursor.moveToNext())
+			list.add(getObject(cursor));
+		return list;
+	}
+
+	public boolean delete(long id) {
+		return getDb().delete(getTableName(),
+				getPrimaryKeyColumnName() + "=" + id, null) > 0;
+	}
+
+	/**
+	 * Returns Cursor with all rows. The Cursor carries all columns.
+	 * 
+	 * @return all rows
+	 */
+	public Cursor getAll() {
+		return getDb()
+				.query(getTableName(), null, null, null, null, null, null);
 	}
 }

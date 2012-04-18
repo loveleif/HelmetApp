@@ -1,12 +1,14 @@
 package se.mah.helmet.storage;
 
+import se.mah.helmet.entity.AccData;
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  * Preliminary database adapter for storing accelerometer data in a SQLite
  * database.
  */
-public class AccDbAdapter extends DbAdapter {
+public class AccDbAdapter extends DbAdapter<AccData> {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 
 	// Remember to increment versionnumber in DbAdapter when you make changes
@@ -19,7 +21,7 @@ public class AccDbAdapter extends DbAdapter {
 	public static final String TABLE_ACC_CREATE = 
 			"CREATE TABLE " + TABLE_ACC	+ "(" 
 			+ KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_TIME + " text not null," 
+			+ KEY_TIME + " integer not null," 
 			+ KEY_ACCX + " real," 
 			+ KEY_ACCY + " real," 
 			+ KEY_ACCZ + " real"
@@ -60,19 +62,19 @@ public class AccDbAdapter extends DbAdapter {
 	*/
 	
 	/**
-	 * Insert accelerometer data to database.
+	 * Insert accelerometer data to database. Time will be current time.
 	 * 
 	 * @param time
 	 * @param accX
 	 * @param accY
 	 * @param accZ
 	 */
-	public void insertData(String time, double accX, double accY, double accZ) {
+	public void insertData(double accX, double accY, double accZ) {
 		getDb().execSQL(
 			"INSERT INTO " + TABLE_ACC +
 			" (" + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
 			" VALUES " +
-			" (\"" + time + "\"," + accX + "," + accY + "," + accZ + ");");
+			" (strftime('%s', 'now')," + accX + "," + accY + "," + accZ + ");");
 	}
 
 	@Override
@@ -83,5 +85,16 @@ public class AccDbAdapter extends DbAdapter {
 	@Override
 	public String getPrimaryKeyColumnName() {
 		return KEY_ROWID;
+	}
+
+	@Override
+	public AccData getObject(Cursor cursor) {
+		AccData accData = new AccData(
+			cursor.getLong(cursor.getColumnIndex(KEY_ROWID)),
+			cursor.getLong(cursor.getColumnIndex(KEY_TIME)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCX)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCY)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCZ)));
+		return accData;
 	}
 }
