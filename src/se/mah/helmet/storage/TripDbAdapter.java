@@ -1,5 +1,10 @@
 package se.mah.helmet.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import se.mah.helmet.entity.Contact;
+import se.mah.helmet.entity.Trip;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -97,8 +102,22 @@ public class TripDbAdapter {
 		return db.query(TABLE_TRIP, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, null);
 	}
 	
-	public Cursor fetchTripsWhere(String where) {
+	public Cursor fetchTripsWhereCursor(String where) {
 		return db.query(TABLE_TRIP, new String[] { KEY_ROWID, KEY_NAME }, where, null, null, null, null);
+	}
+	
+	public List<Trip> fetchTripsWhere(String where) {
+		List<Trip> trips = new ArrayList<Trip>();
+		Cursor cursor = fetchTripsWhereCursor(where);
+		int colIdxId = cursor.getColumnIndex(KEY_ROWID);
+		int colIdxName = cursor.getColumnIndex(KEY_NAME);
+		
+		while (cursor.moveToNext()) {
+			trips.add(new Trip(
+					cursor.getLong(colIdxId),
+					cursor.getString(colIdxName)));
+		}
+		return trips;
 	}
 	
 	public Cursor fetchTrip(Long rowId) {
