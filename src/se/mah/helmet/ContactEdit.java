@@ -1,6 +1,6 @@
 package se.mah.helmet;
 
-import se.mah.helmet.storage.ContactsDbAdapter;
+import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class ContactEdit extends Activity {
-	private ContactsDbAdapter dbHelper;
+	private ContactDbAdapter dbHelper;
 	private EditText name;
 	private EditText phoneNbr;
 	private Long rowId;
@@ -17,7 +17,7 @@ public class ContactEdit extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		dbHelper = new ContactsDbAdapter(this);
+		dbHelper = new ContactDbAdapter(this);
 		dbHelper.open();
 
 		setContentView(R.layout.contact_edit);
@@ -30,13 +30,13 @@ public class ContactEdit extends Activity {
 			rowId = null;
 		else
 			rowId = (Long) savedInstanceState
-					.getSerializable(ContactsDbAdapter.KEY_ROWID);
+					.getSerializable(ContactDbAdapter.KEY_ROWID);
 
 		// Get row id from Intent
 		if (rowId == null) {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null)
-				rowId = extras.getLong(ContactsDbAdapter.KEY_ROWID);
+				rowId = extras.getLong(ContactDbAdapter.KEY_ROWID);
 		}
 
 		populateFields();
@@ -58,16 +58,16 @@ public class ContactEdit extends Activity {
 		Cursor note = dbHelper.fetchContact(rowId);
 		startManagingCursor(note);
 		name.setText(note.getString(note
-				.getColumnIndexOrThrow(ContactsDbAdapter.KEY_NAME)));
+				.getColumnIndexOrThrow(ContactDbAdapter.KEY_NAME)));
 		phoneNbr.setText(note.getString(note
-				.getColumnIndexOrThrow(ContactsDbAdapter.KEY_PHONE)));
+				.getColumnIndexOrThrow(ContactDbAdapter.KEY_PHONE)));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		saveState();
-		outState.putSerializable(ContactsDbAdapter.KEY_ROWID, rowId);
+		outState.putSerializable(ContactDbAdapter.KEY_ROWID, rowId);
 	}
 
 	@Override
