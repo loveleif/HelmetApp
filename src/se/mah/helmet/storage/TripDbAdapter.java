@@ -97,6 +97,10 @@ public class TripDbAdapter {
 		return db.query(TABLE_TRIP, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, null);
 	}
 	
+	public Cursor fetchTripsWhere(String where) {
+		return db.query(TABLE_TRIP, new String[] { KEY_ROWID, KEY_NAME }, where, null, null, null, null);
+	}
+	
 	public Cursor fetchTrip(Long rowId) {
 		Cursor cursor = db.query(true, TABLE_TRIP, new String[] {
 				KEY_ROWID, KEY_NAME }, KEY_ROWID + "=" + rowId,
