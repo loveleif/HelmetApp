@@ -27,7 +27,7 @@ public class ContactsDbAdapter {
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_NAME = "name";
 	public static final String KEY_PHONE = "phone_nbr";
-	static final String TABLE_ACC_CREATE = "CREATE TABLE " + TABLE_CONTACTS
+	static final String TABLE_CONTACTS_CREATE = "CREATE TABLE " + TABLE_CONTACTS
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
 			+ KEY_NAME + " text not null," + KEY_PHONE + " text" + ")";
 
@@ -42,7 +42,7 @@ public class ContactsDbAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(TABLE_ACC_CREATE);
+			db.execSQL(TABLE_CONTACTS_CREATE);
 			Log.i(TAG, "Created database " + DB_NAME + ".");
 
 		}
