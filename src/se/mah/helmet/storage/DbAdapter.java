@@ -20,7 +20,7 @@ public abstract class DbAdapter<T> {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 
 	private static final String DB_NAME = "helmet_db";
-	private static final int DB_VERSION = 1;
+	private static final int DB_VERSION = 2;
 
 	private final Context context;
 	private DatabaseHelper dbHelper;

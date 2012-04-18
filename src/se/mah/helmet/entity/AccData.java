@@ -2,6 +2,10 @@ package se.mah.helmet.entity;
 
 import java.sql.Date;
 
+import org.json.JSONObject;
+
+import se.mah.helmet.LightJson;
+
 public class AccData {
 	private long sourceId = -1;
 	private Date date;
