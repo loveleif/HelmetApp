@@ -9,9 +9,7 @@ import android.location.Location;
 import android.util.Log;
 
 public class LocDbAdapter {
-	// TODO Implement trip table
-	
-    private static final String DB_NAME = "loc";
+    private static final String DB_NAME = "helmet_db";
     private static final int DB_VERSION = 1;
     
     private static final String TAG = LocDbAdapter.class.getSimpleName();
@@ -20,7 +18,7 @@ public class LocDbAdapter {
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     
-    private static final String TABLE_COORD = "coord";
+    private static final String TABLE_COORD = "loc";
     
     private static final String KEY_ROWID = "_id";
     private static final String KEY_TIME = "time";
@@ -113,5 +111,4 @@ public class LocDbAdapter {
     	
     	return mDb.insert(TABLE_COORD, null, values);
     }
-   
 }
