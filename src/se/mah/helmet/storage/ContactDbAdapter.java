@@ -85,4 +85,14 @@ public class ContactDbAdapter extends DbAdapter {
 		return getDb().update(TABLE_CONTACT, args, KEY_ROWID + "=" + rowId,
 				null) > 0;
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_CONTACT;
+	}
+
+	@Override
+	public String getPrimaryKeyColumnName() {
+		return KEY_ROWID;
+	}
 }

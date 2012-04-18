@@ -1,25 +1,28 @@
 package se.mah.helmet.storage;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.util.Log;
 
 /**
- * Provides a common SQLiteOpenHelper for all database adapters using the helmet_db database.
- *
+ * Provides a common SQLiteOpenHelper for all database adapters using the
+ * helmet_db database.
+ * 
  */
 public abstract class DbAdapter {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
-	
+
 	private static final String DB_NAME = "helmet_db";
 	private static final int DB_VERSION = 1;
-	
+
 	private final Context context;
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
-	
+
 	/**
 	 * SQLiteOpenHelper for helmet db
 	 */
@@ -32,13 +35,17 @@ public abstract class DbAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(TripDbAdapter.TABLE_TRIP_CREATE);
-			Log.i(TAG, "Created table " + DB_NAME + "." + TripDbAdapter.TABLE_TRIP + ".");
+			Log.i(TAG, "Created table " + DB_NAME + "."
+					+ TripDbAdapter.TABLE_TRIP + ".");
 			db.execSQL(ContactDbAdapter.TABLE_CONTACT_CREATE);
-			Log.i(TAG, "Created database " + DB_NAME + "." + ContactDbAdapter.TABLE_CONTACT + ".");
+			Log.i(TAG, "Created database " + DB_NAME + "."
+					+ ContactDbAdapter.TABLE_CONTACT + ".");
 			db.execSQL(AccDbAdapter.TABLE_ACC_CREATE);
-			Log.i(TAG, "Created database " + DB_NAME + "." + AccDbAdapter.TABLE_ACC + ".");
+			Log.i(TAG, "Created database " + DB_NAME + "."
+					+ AccDbAdapter.TABLE_ACC + ".");
 			db.execSQL(LocDbAdapter.TABLE_LOC_CREATE);
-			Log.i(TAG, "Created database " + DB_NAME + "." + LocDbAdapter.TABLE_LOC + ".");
+			Log.i(TAG, "Created database " + DB_NAME + "."
+					+ LocDbAdapter.TABLE_LOC + ".");
 		}
 
 		@Override
@@ -52,7 +59,7 @@ public abstract class DbAdapter {
 			onCreate(db);
 		}
 	}
-	
+
 	/**
 	 * Constructor - takes the context to allow the database to be
 	 * opened/created
@@ -82,8 +89,25 @@ public abstract class DbAdapter {
 	public void close() {
 		db.close();
 	}
-	
+
 	protected SQLiteDatabase getDb() {
 		return db;
+	}
+
+	public abstract String getTableName();
+
+	public abstract String getPrimaryKeyColumnName();
+
+	/**
+	 * Returns the last id from the database.
+	 * 
+	 * @return last location
+	 */
+	public long getLastId() {
+		Cursor cursor = getDb().query(getTableName(), null,
+				getPrimaryKeyColumnName(), null, null, null,
+				getPrimaryKeyColumnName() + " desc", "1");
+		cursor.moveToFirst();
+		return cursor.getLong(0);
 	}
 }

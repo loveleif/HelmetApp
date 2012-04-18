@@ -70,4 +70,14 @@ public class TripDbAdapter extends DbAdapter {
 			cursor.moveToFirst();
 		return cursor;
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_TRIP;
+	}
+
+	@Override
+	public String getPrimaryKeyColumnName() {
+		return KEY_ROWID;
+	}
 }

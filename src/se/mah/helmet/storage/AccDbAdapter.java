@@ -74,4 +74,14 @@ public class AccDbAdapter extends DbAdapter {
 			" VALUES " +
 			" (\"" + time + "\"," + accX + "," + accY + "," + accZ + ");");
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_ACC;
+	}
+
+	@Override
+	public String getPrimaryKeyColumnName() {
+		return KEY_ROWID;
+	}
 }

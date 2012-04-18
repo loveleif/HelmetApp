@@ -77,4 +77,14 @@ public class LocDbAdapter extends DbAdapter {
 		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));		
 		return loc;
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_LOC;
+	}
+
+	@Override
+	public String getPrimaryKeyColumnName() {
+		return KEY_ROWID;
+	}
 }
