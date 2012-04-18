@@ -30,6 +30,7 @@
         <activity android:name=".SettingsActivity"></activity>
         <service android:name="BluetoothService">
         </service>
+        <activity android:name="AlarmAcknowledgeActivity"></activity>
     </application>
 
 </manifest>
