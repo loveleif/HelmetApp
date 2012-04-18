@@ -1,7 +1,5 @@
 package se.mah.helmet;
 
-import java.util.Date;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -9,14 +7,16 @@ import org.json.JSONTokener;
 import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.AccDbAdapter;
 import se.mah.helmet.storage.ContactsDbAdapter;
+import android.app.Activity;
 import android.content.Context;
-import android.telephony.SmsManager;
+import android.content.Intent;
 import android.util.Log;
 
-public class DataRecieve {	
+public class DataRecieve extends Activity {	
 	public static final int RECIEVE_FAIL = -1;
 	public static final int RECIEVE_OK = 1;
 	private static final String TAG = DataRecieve.class.getSimpleName();
+	private static final int ALARM_SEND_TIMEOUT_REQUEST = 1;
 	
 	private final ContactsDbAdapter contactDb;
 	private final AccDbAdapter accDb;
@@ -69,6 +69,18 @@ public class DataRecieve {
 	}
 
 	private int handleAlarm(JSONObject obj) {
+		Intent intent = new Intent(context, AlarmAcknowledgeActivity.class);
+	    startActivityForResult(intent, ALARM_SEND_TIMEOUT_REQUEST);
+		
+		// TODO Spara severity
+		// TODO Skicka larm till server
+		// Se http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
+		// TODO Smsa kontakter
+		
+		return RECIEVE_OK;
+	}
+	
+	private void sendAlarm() {
 		String alarmMsg = "Help me Obi-Wan. You're my only hope. ";
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
@@ -83,12 +95,19 @@ public class DataRecieve {
 					null);*/
 			Log.i(TAG, "Sending alarm to " + contact.toString());
 		}
-		
-		// TODO Spara severity
-		// TODO Skicka larm till server
-		// Se http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
-		// TODO Smsa kontakter
-		
-		return RECIEVE_OK;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case ALARM_SEND_TIMEOUT_REQUEST:
+			if (resultCode == AlarmAcknowledgeActivity.RESULT_SEND_ALARM)
+				sendAlarm();
+			else if (resultCode == AlarmAcknowledgeActivity.RESULT_ALARM_CANCELLED)
+				Log.i(TAG, "Alarm cancelled.");
+			else
+				Log.e(TAG, "Invalid result code.");
+			break;
+		}
 	}
 }

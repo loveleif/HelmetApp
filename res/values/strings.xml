@@ -41,5 +41,7 @@
     <string name="contact_edit_hint_name">Contact Name</string>
     <string name="contact_edit_hint_phone">SMS Telephone Number</string>
     <string name="contact_edit_confirm">Confirm</string>
+    <string name="alarm_acknowledge_text">Alarm has gone off!</string>
+    <string name="alarm_acknowledge_btn">Cancel Emergency SMS</string>
 
 </resources>
