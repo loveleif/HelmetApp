@@ -2,6 +2,7 @@ package se.mah.helmet.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,7 +17,7 @@ public class LocDbAdapter {
 
 	private final Context mCtx;
 	private DatabaseHelper mDbHelper;
-	private SQLiteDatabase mDb;
+	private SQLiteDatabase db;
 
 	private static final String TABLE_COORD = "loc";
 
@@ -28,12 +29,13 @@ public class LocDbAdapter {
 	private static final String KEY_ACCURACY = "accuracy";
 	private static final String KEY_SPEED = "speed";
 	private static final String KEY_BEARING = "bearing";
+	private static final String KEY_PROVIDER = "provider";
 	private static final String TABLE_COORD_CREATE = "CREATE TABLE "
 			+ TABLE_COORD + "(" + KEY_ROWID
 			+ " integer primary key autoincrement, " + KEY_TIME
-			+ " text not null," + KEY_LAT + " real," + KEY_LONG + " real,"
+			+ " integer," + KEY_LAT + " real," + KEY_LONG + " real,"
 			+ KEY_ALT + " real," + KEY_ACCURACY + " real," + KEY_SPEED
-			+ " real," + KEY_BEARING + " real)";
+			+ " real," + KEY_BEARING + " real," + KEY_PROVIDER + ")";
 
 	/**
 	 * SQLiteOpenHelper for the LocDbAdapter
@@ -83,12 +85,12 @@ public class LocDbAdapter {
 	 */
 	public LocDbAdapter open() throws SQLException {
 		mDbHelper = new DatabaseHelper(mCtx);
-		mDb = mDbHelper.getWritableDatabase();
+		db = mDbHelper.getWritableDatabase();
 		return this;
 	}
 
 	public void close() {
-		mDb.close();
+		db.close();
 	}
 
 	/**
@@ -108,7 +110,27 @@ public class LocDbAdapter {
 		values.put(KEY_ACCURACY, location.getAccuracy());
 		values.put(KEY_SPEED, location.getSpeed());
 		values.put(KEY_BEARING, location.getBearing());
+		values.put(KEY_PROVIDER, location.getProvider());
 
-		return mDb.insert(TABLE_COORD, null, values);
+		return db.insert(TABLE_COORD, null, values);
+	}
+	
+	/**
+	 * Returns the last Location from the database.
+	 * 
+	 * @return last location
+	 */
+	public Location getLastLocation() {
+		Cursor cursor = db.query(TABLE_COORD, null, null, null, null, null, KEY_ROWID + " desc", "1");
+		cursor.moveToFirst();
+		Location loc = new Location(cursor.getString(cursor.getColumnIndex(KEY_PROVIDER)));
+		loc.setAccuracy(cursor.getFloat(cursor.getColumnIndex(KEY_ACCURACY)));
+		loc.setAltitude(cursor.getFloat(cursor.getColumnIndex(KEY_ALT)));
+		loc.setBearing(cursor.getFloat(cursor.getColumnIndex(KEY_BEARING)));
+		loc.setLongitude(cursor.getFloat(cursor.getColumnIndex(KEY_LONG)));
+		loc.setLatitude(cursor.getFloat(cursor.getColumnIndex(KEY_LAT)));
+		loc.setSpeed(cursor.getFloat(cursor.getColumnIndex(KEY_SPEED)));
+		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));		
+		return loc;
 	}
 }
