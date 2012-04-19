@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class DataRecieve extends Activity {	
+public class DataRecieve extends Activity {
 	public static final int RECIEVE_FAIL = -1;
 	public static final int RECIEVE_OK = 1;
 	private static final String TAG = DataRecieve.class.getSimpleName();
