@@ -37,6 +37,8 @@ public abstract class DbAdapter<T> {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("PRAGMA foreign_keys = ON;");
+			
 			db.execSQL(TripDbAdapter.TABLE_TRIP_CREATE);
 			Log.i(TAG, "Created table " + DB_NAME + "."
 					+ TripDbAdapter.TABLE_TRIP + ".");
