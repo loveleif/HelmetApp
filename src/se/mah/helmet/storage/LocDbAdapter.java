@@ -19,12 +19,17 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	public static final String KEY_SPEED = "speed";
 	public static final String KEY_BEARING = "bearing";
 	public static final String KEY_PROVIDER = "provider";
-	public static final String TABLE_LOC_CREATE = "CREATE TABLE "
-			+ TABLE_LOC + "(" + KEY_ROWID
-			+ " integer primary key autoincrement, " + KEY_TIME
-			+ " integer," + KEY_LAT + " real," + KEY_LONG + " real,"
-			+ KEY_ALT + " real," + KEY_ACCURACY + " real," + KEY_SPEED
-			+ " real," + KEY_BEARING + " real," + KEY_PROVIDER + ")";
+	public static final String TABLE_LOC_CREATE = 
+			"CREATE TABLE "	+ TABLE_LOC + "("
+			+ KEY_ROWID	+ " integer primary key autoincrement, "
+			+ KEY_TIME + " integer," 
+			+ KEY_LAT + " real," 
+			+ KEY_LONG + " real,"
+			+ KEY_ALT + " real," 
+			+ KEY_ACCURACY + " real," 
+			+ KEY_SPEED + " real," 
+			+ KEY_BEARING + " real," 
+			+ KEY_PROVIDER + "text)";
 
 	/**
 	 * Constructor - takes the context to allow the database to be
