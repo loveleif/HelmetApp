@@ -27,7 +27,8 @@ public class AccDbAdapter extends DbAdapter<AccData> {
 			+ KEY_ACCX + " real," 
 			+ KEY_ACCY + " real," 
 			+ KEY_ACCZ + " real,"
-			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ") not null"
+			+ KEY_TRIP_ID + " integer,"
+			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ")"
 			+ ")";
 
 	/**

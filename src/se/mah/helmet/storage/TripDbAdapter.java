@@ -16,7 +16,7 @@ public class TripDbAdapter extends DbAdapter<Trip> {
 	public static final String KEY_NAME = "name";
 	public static final String TABLE_TRIP_CREATE = "CREATE TABLE " + TABLE_TRIP
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_NAME + " text not null," + ")";
+			+ KEY_NAME + " text not null)";
 
 	/**
 	 * Constructor - takes the context to allow the database to be

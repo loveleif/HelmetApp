@@ -14,9 +14,9 @@ public class AlarmDbAdapter extends DbAdapter<Alarm> {
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_SEVERITY = "severity";
 	public static final String TABLE_ALARM_CREATE = 
-			"CREATE TABLE "	+ TABLE_ALARM + "("
+			"CREATE TABLE "	+ TABLE_ALARM + " ("
 			+ KEY_ROWID	+ " integer primary key autoincrement, "
-			+ KEY_SEVERITY + " integer," 
+			+ KEY_SEVERITY + " integer" 
 			+ ")";
 
 	public AlarmDbAdapter(Context context) {
