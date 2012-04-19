@@ -38,5 +38,14 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/labelOnOff"
         android:text="Testa kvittens" />
+
+    <Button
+        android:id="@+id/btnTestAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnTest"
+        android:layout_alignBottom="@+id/btnTest"
+        android:layout_toRightOf="@+id/labelOnOff"
+        android:text="Test ALARM" />
 
 </RelativeLayout>

@@ -31,6 +31,7 @@
         <service android:name="BluetoothService">
         </service>
         <activity android:name="AlarmAcknowledgeActivity"></activity>
+        <service android:name="DataRecieve"></service>
     </application>
 
 </manifest>

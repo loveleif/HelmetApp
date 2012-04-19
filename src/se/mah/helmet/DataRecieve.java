@@ -4,34 +4,65 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.AccDbAdapter;
+import se.mah.helmet.storage.AlarmDbAdapter;
 import se.mah.helmet.storage.ContactDbAdapter;
-import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.SQLException;
+import android.os.IBinder;
 import android.util.Log;
 
-public class DataRecieve extends Activity {
+public class DataRecieve extends Service {
 	public static final int RECIEVE_FAIL = -1;
 	public static final int RECIEVE_OK = 1;
 	private static final String TAG = DataRecieve.class.getSimpleName();
 	private static final int ALARM_SEND_TIMEOUT_REQUEST = 1;
+	public static final String ACTION_SEND_ALARM = "se.mah.helmet.SEND_ALARM";
+	public static final String ACTION_RECIEVE_DATA = "se.mah.helmet.RECIEVE_DATA";
+	public static final String ACTION_CONFIRM_ALARM = "se.mah.helmet.CONFIRM_ALARM";
+	public static final String JSON_DATA_KEY = "json_data";
+	public static final String ALARM_ID_KEY = "alarm_id";
 	
-	private final ContactDbAdapter contactDb;
-	private final AccDbAdapter accDb;
-	private final Context context;
+	private ContactDbAdapter contactDb;
+	private AccDbAdapter accDb;
+	private AlarmDbAdapter alarmDb;
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-	public DataRecieve(Context context) {
-		Log.d(TAG, "context="+context.toString());
-		this.context = context;
-		accDb = new AccDbAdapter(context);
+		accDb = new AccDbAdapter(getApplicationContext());
 		accDb.open();
-		contactDb = new ContactDbAdapter(context);
+		contactDb = new ContactDbAdapter(getApplicationContext());
 		contactDb.open();
+		alarmDb = new AlarmDbAdapter(getApplicationContext());
+		alarmDb.open();
 	}
 	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		String action = intent.getAction();
+		Log.d(TAG, "Recieved start command, action=" + action);
+		if (action.equals(ACTION_RECIEVE_DATA)) {
+			recieve(intent.getStringExtra(JSON_DATA_KEY));
+		} else if (action.equals(ACTION_SEND_ALARM)) {
+			sendAlarm();
+		}
+
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
+	private void confirmAlarm() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public int recieve(String input) {
+		Log.d(TAG, "About to handle data: " + input);
 		JSONObject obj;
 		String type;
 		try {
@@ -43,8 +74,10 @@ public class DataRecieve extends Activity {
 		}
 
 		Log.d(TAG, "data type: " + type);
-		if (type.equals("alarm"))
+		if (type.equals("alarm")) {
+			Log.d(TAG, "Type is alarm");
 			return handleAlarm(obj);
+		}
 		else if (type.equals("acc_data"))
 			return handleAccData(obj);
 		
@@ -63,24 +96,35 @@ public class DataRecieve extends Activity {
 			return RECIEVE_FAIL;
 		}
 		
-		// Bug: NullPointerException
+		// TODO:
 		//accDb.insertData(new Date().toString(), accX, accY, accZ);
 		return RECIEVE_OK;
 	}
 
 	private int handleAlarm(JSONObject obj) {
-		Intent intent = new Intent(context, AlarmAcknowledgeActivity.class);
-	    startActivityForResult(intent, ALARM_SEND_TIMEOUT_REQUEST);
-		
-		// TODO Spara severity
-		// TODO Skicka larm till server
+		Log.i(TAG, "About to handle alarm...");
+		long alarmId = -1;
+		try {
+			alarmId = alarmDb.insert(new Alarm(-1, (short) obj.getInt("severity")));
+			Log.d(TAG, "Inserted new alarm in db with id=" + alarmId);
+		} catch (JSONException e) {
+			Log.e(TAG, "Unable to parse alarm JSON.");
+		} catch (SQLException e) {
+			Log.e(TAG, "Unable to save alarm to database");
+		}
+
+		Intent intent = new Intent(getApplicationContext(), AlarmAcknowledgeActivity.class);
+		intent.putExtra(ALARM_ID_KEY, alarmId);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    startActivity(intent);
+
+	    // TODO Skicka larm till server
 		// Se http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
-		// TODO Smsa kontakter
-		
 		return RECIEVE_OK;
 	}
 	
 	private void sendAlarm() {
+		Log.i(TAG, "About to send alarm.");
 		String alarmMsg = "Help me Obi-Wan. You're my only hope. ";
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
@@ -96,18 +140,10 @@ public class DataRecieve extends Activity {
 			Log.i(TAG, "Sending alarm to " + contact.toString());
 		}
 	}
-	
+
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case ALARM_SEND_TIMEOUT_REQUEST:
-			if (resultCode == AlarmAcknowledgeActivity.RESULT_SEND_ALARM)
-				sendAlarm();
-			else if (resultCode == AlarmAcknowledgeActivity.RESULT_ALARM_CANCELLED)
-				Log.i(TAG, "Alarm cancelled.");
-			else
-				Log.e(TAG, "Invalid result code.");
-			break;
-		}
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

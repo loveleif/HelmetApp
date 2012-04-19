@@ -39,8 +39,17 @@ public class StartStopActivity extends Activity {
 		Button btnTest = (Button) findViewById(R.id.btnTest);
 		btnTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-        		Intent intent = new Intent(getApplicationContext(), AlarmAcknowledgeActivity.class);
-        	    startActivityForResult(intent, 45);
+        		// TODO
+            }
+        });
+		
+		Button btnAlarmTest = (Button) findViewById(R.id.btnTestAlarm);
+		btnAlarmTest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		Intent intent = new Intent(getApplicationContext(), DataRecieve.class);
+        		intent.putExtra(DataRecieve.JSON_DATA_KEY, "{\"type\":\"alarm\",\"severity\":5}");
+        	    intent.setAction(DataRecieve.ACTION_RECIEVE_DATA);
+        	    startService(intent);
             }
         });
 		

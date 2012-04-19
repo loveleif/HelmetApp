@@ -1,12 +1,13 @@
 package se.mah.helmet;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,18 +20,21 @@ public class AlarmAcknowledgeActivity extends Activity {
 
 	private long startTime;
 	private long time = 0; // Time left in milliseconds
-	private long totalTime = 30000;
+	private long totalTime = 3000;
 	private long period = 1000;
 	
 	private Button btnCancel;
 	private TextView txtvCountDown;
+
+	private Intent sendAlarmIntent;
 	
 	private Handler handler = new Handler();
 	private Runnable update = new Runnable() {
 		public void run() {
 			time = SystemClock.uptimeMillis() - startTime;
 			if (time >= totalTime) {
-				setResult(RESULT_SEND_ALARM);
+				Log.d(TAG, "About to send alarm.");
+				startService(sendAlarmIntent);
 				finish();
 			} else {
 				txtvCountDown.setText((totalTime - time) / 1000 + " seconds left to cancel.");
@@ -47,9 +51,12 @@ public class AlarmAcknowledgeActivity extends Activity {
 		btnCancel = (Button) findViewById(R.id.btnAlarmAcknowledge);
 		txtvCountDown = (TextView) findViewById(R.id.txtvAlarmCountDown);
 		
+		sendAlarmIntent = new Intent(getApplicationContext(), DataRecieve.class);
+		sendAlarmIntent.setAction(DataRecieve.ACTION_SEND_ALARM);
+		sendAlarmIntent.putExtra(DataRecieve.ALARM_ID_KEY, getIntent().getLongExtra(DataRecieve.ALARM_ID_KEY, -1));
+		
 		btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setResult(RESULT_ALARM_CANCELLED);
                 finish();
             }
         });

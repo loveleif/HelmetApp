@@ -41,17 +41,15 @@ public class BluetoothService extends Service {
 
 	private int state;
 
-	private DataRecieve dataRecieve;
 	private static final int STATE_OFF = 1;
 	private static final int STATE_ON = 2;
 	
 	private static final byte END_OF_TRANSMISSION = 4;
-		
+
 	public BluetoothService(Context context) {
 		this.context = context;
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		state = STATE_OFF;
-		dataRecieve = new DataRecieve(context);
 	}
 
 	public synchronized void connect(BluetoothDevice device) {
@@ -230,7 +228,9 @@ public class BluetoothService extends Service {
 					// Temp hantering
 					data = new String(buffer, 0, offset - 1);
 					Log.d(TAG, "BT Data: " + data);
-					Log.d(TAG, "DataRecieve: " + dataRecieve.recieve(data));
+					Intent intent = new Intent(context, DataRecieve.class);
+					intent.putExtra(DataRecieve.JSON_DATA_KEY, data);
+					context.stopService(intent);
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());
