@@ -10,7 +10,6 @@ import se.mah.helmet.storage.AccDbAdapter;
 import se.mah.helmet.storage.AlarmDbAdapter;
 import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.IBinder;
@@ -20,7 +19,6 @@ public class DataRecieve extends Service {
 	public static final int RECIEVE_FAIL = -1;
 	public static final int RECIEVE_OK = 1;
 	private static final String TAG = DataRecieve.class.getSimpleName();
-	private static final int ALARM_SEND_TIMEOUT_REQUEST = 1;
 	public static final String ACTION_SEND_ALARM = "se.mah.helmet.SEND_ALARM";
 	public static final String ACTION_RECIEVE_DATA = "se.mah.helmet.RECIEVE_DATA";
 	public static final String ACTION_CONFIRM_ALARM = "se.mah.helmet.CONFIRM_ALARM";
@@ -56,11 +54,6 @@ public class DataRecieve extends Service {
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
-	private void confirmAlarm() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public int recieve(String input) {
 		Log.d(TAG, "About to handle data: " + input);
 		JSONObject obj;

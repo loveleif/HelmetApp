@@ -3,7 +3,6 @@ package se.mah.helmet;
 import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -59,7 +58,7 @@ public class ContactEdit extends Activity {
 
 		Contact contact = dbHelper.getObject(rowId);
 		name.setText(contact.getName());
-		phoneNbr.setText(contact.getPhone());
+		phoneNbr.setText(contact.getPhoneNbr());
 	}
 
 	@Override

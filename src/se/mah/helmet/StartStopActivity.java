@@ -3,9 +3,7 @@ package se.mah.helmet;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +32,7 @@ public class StartStopActivity extends Activity {
 		
 		setContentView(R.layout.on_off);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Button btnTest = (Button) findViewById(R.id.btnTest);
 		btnTest.setOnClickListener(new View.OnClickListener() {

@@ -1,10 +1,6 @@
 package se.mah.helmet.entity;
 
-import java.sql.Date;
-
-import org.json.JSONObject;
-
-import se.mah.helmet.LightJson;
+import java.util.Date;
 
 public class AccData {
 	private long sourceId = -1;
@@ -49,5 +45,13 @@ public class AccData {
 	}
 	public void setAccZ(double accZ) {
 		this.accZ = accZ;
+	}
+
+	public long getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(long sourceId) {
+		this.sourceId = sourceId;
 	}
 }

@@ -1,7 +1,5 @@
 package se.mah.helmet;
 
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,12 +61,5 @@ public class AlarmAcknowledgeActivity extends Activity {
 		
 		startTime = SystemClock.uptimeMillis();
 		handler.post(update);
-	}
-	
-	private class AlarmTimerTask extends TimerTask {
-		@Override
-		public void run() {
-
-		}
 	}
 }

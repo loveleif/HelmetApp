@@ -1,9 +1,6 @@
 package se.mah.helmet;
 
-import java.util.Date;
-
 import se.mah.helmet.storage.LocDbAdapter;
-import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;

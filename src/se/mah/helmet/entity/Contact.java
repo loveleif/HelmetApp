@@ -20,10 +20,16 @@ public class Contact {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPhone() {
+	public String getPhoneNbr() {
 		return phoneNbr;
 	}
 	public void setPhoneNbr(String phoneNbr) {
 		this.phoneNbr = phoneNbr;
+	}
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
 	}
 }

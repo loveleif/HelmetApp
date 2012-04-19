@@ -71,7 +71,7 @@ public class ContactDbAdapter extends DbAdapter<Contact> {
 	public ContentValues getContentValues(Contact contact) {
 		ContentValues cv = new ContentValues();
 		cv.put(KEY_NAME, contact.getName());
-		cv.put(KEY_PHONE, contact.getPhone());
+		cv.put(KEY_PHONE, contact.getPhoneNbr());
 		return cv;
 	}
 }
