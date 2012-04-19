@@ -19,6 +19,7 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	public static final String KEY_SPEED = "speed";
 	public static final String KEY_BEARING = "bearing";
 	public static final String KEY_PROVIDER = "provider";
+	public static final String KEY_TRIP_ID = "trip_id";
 	public static final String TABLE_LOC_CREATE = 
 			"CREATE TABLE "	+ TABLE_LOC + "("
 			+ KEY_ROWID	+ " integer primary key autoincrement, "
@@ -29,7 +30,9 @@ public class LocDbAdapter extends DbAdapter<Location> {
 			+ KEY_ACCURACY + " real," 
 			+ KEY_SPEED + " real," 
 			+ KEY_BEARING + " real," 
-			+ KEY_PROVIDER + "text)";
+			+ KEY_PROVIDER + "text"
+			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ") not null"
+			+ ")";
 
 	/**
 	 * Constructor - takes the context to allow the database to be
@@ -50,7 +53,7 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	 * @return the row ID of the newly inserted row, or -1 if an error occurred
 	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
 	 */
-	public long insertLocation(Location location) {
+	public long insertLocation(long tripId, Location location) {
 		ContentValues values = new ContentValues(7);
 		values.put(KEY_TIME, location.getTime());
 		values.put(KEY_LAT, location.getLatitude());
