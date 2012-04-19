@@ -1,30 +1,46 @@
 package se.mah.helmet.storage;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 
+import se.mah.helmet.Prefs;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final String TAG = SyncAdapter.class.getSimpleName();
 	private final Context context;
 	private final AccountManager accountManager;
 	private final AndroidHttpClient httpClient;
+	private String domain;
+	private String user;
 	private static final String ACCEPT_HEADER_KEY = "Accept";
 	private static final String TYPE_TEXT_PLAIN = "text/plain";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		domain = prefs.getString(Prefs.SERVER_DOMAIN, null);
+		user = prefs.getString(Prefs.SERVER_USER, null);
+		if (domain == null || user == null)
+			// TODO Handle differently
+			throw new RuntimeException("Missing server settings.");
+		domain = "http://" + domain;
+		
 		this.context = context;
 		accountManager = AccountManager.get(context);
 		httpClient = AndroidHttpClient.newInstance("HelmetAppSyncAdapter");
@@ -52,12 +68,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 	
 	private long getLastIdOnServer(String table) {
-		// TODO
-		HttpUriRequest request = new HttpGet("bla");
+		String resourcePath;
+		if (table == TripDbAdapter.TABLE_TRIP)
+			resourcePath = "/users/" + user + "/trips/last";
+		else
+			return -1;
+		HttpUriRequest request = new HttpGet(domain + resourcePath);
 		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
 		
-		
-		//httpClient.execute(request)
+		HttpResponse response;
+		try {
+			HttpResponse response = httpClient.execute(request);
+		} catch (IOException e) {
+			Log.e(TAG, "Http request failed: " + request);
+			return -1;
+		}
+		//response.getEntity().getContent().
 		return -1;
 	}
 }
