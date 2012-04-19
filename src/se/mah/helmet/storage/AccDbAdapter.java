@@ -18,13 +18,15 @@ public class AccDbAdapter extends DbAdapter<AccData> {
 	public static final String KEY_ACCX = "acc_x";
 	public static final String KEY_ACCY = "acc_y";
 	public static final String KEY_ACCZ = "acc_z";
+	public static final String KEY_TRIP_ID = "trip_id";
 	public static final String TABLE_ACC_CREATE = 
 			"CREATE TABLE " + TABLE_ACC	+ "(" 
 			+ KEY_ROWID + " integer primary key autoincrement, "
 			+ KEY_TIME + " integer not null," 
 			+ KEY_ACCX + " real," 
 			+ KEY_ACCY + " real," 
-			+ KEY_ACCZ + " real"
+			+ KEY_ACCZ + " real,"
+			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ") not null"
 			+ ")";
 
 	/**
@@ -46,12 +48,12 @@ public class AccDbAdapter extends DbAdapter<AccData> {
 	 * @param accY
 	 * @param accZ
 	 */
-	public void insertData(double accX, double accY, double accZ) {
+	public void insertData(long tripId, double accX, double accY, double accZ) {
 		getDb().execSQL(
 			"INSERT INTO " + TABLE_ACC +
-			" (" + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
+			" (" + KEY_TRIP_ID + "," + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
 			" VALUES " +
-			" (strftime('%s', 'now')," + accX + "," + accY + "," + accZ + ");");
+			" (" + tripId + ",strftime('%s', 'now')," + accX + "," + accY + "," + accZ + ");");
 	}
 
 	@Override

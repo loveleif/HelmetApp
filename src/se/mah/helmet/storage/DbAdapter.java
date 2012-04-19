@@ -57,10 +57,10 @@ public abstract class DbAdapter<T> {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data.");
-			db.execSQL("DROP TABLE IF EXISTS " + TripDbAdapter.TABLE_TRIP);
 			db.execSQL("DROP TABLE IF EXISTS " + ContactDbAdapter.TABLE_CONTACT);
 			db.execSQL("DROP TABLE IF EXISTS " + AccDbAdapter.TABLE_ACC);
 			db.execSQL("DROP TABLE IF EXISTS " + LocDbAdapter.TABLE_LOC);
+			db.execSQL("DROP TABLE IF EXISTS " + TripDbAdapter.TABLE_TRIP);
 			onCreate(db);
 		}
 	}
