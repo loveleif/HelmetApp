@@ -87,4 +87,11 @@ public class TripDbAdapter extends DbAdapter<Trip> {
 			cursor.getLong(cursor.getColumnIndex(KEY_ROWID)),
 			cursor.getString(cursor.getColumnIndex(KEY_NAME)));
 	}
+
+	@Override
+	public ContentValues getContentValues(Trip trip) {
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_NAME, trip.getName());
+		return cv;
+	}
 }

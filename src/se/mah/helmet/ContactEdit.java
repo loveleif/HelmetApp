@@ -59,7 +59,7 @@ public class ContactEdit extends Activity {
 
 		Contact contact = dbHelper.getObject(rowId);
 		name.setText(contact.getName());
-		phoneNbr.setText(contact.getPhoneNbr());
+		phoneNbr.setText(contact.getPhone());
 	}
 
 	@Override

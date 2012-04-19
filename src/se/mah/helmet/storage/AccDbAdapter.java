@@ -1,6 +1,7 @@
 package se.mah.helmet.storage;
 
 import se.mah.helmet.entity.AccData;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -75,5 +76,15 @@ public class AccDbAdapter extends DbAdapter<AccData> {
 			cursor.getDouble(cursor.getColumnIndex(KEY_ACCY)),
 			cursor.getDouble(cursor.getColumnIndex(KEY_ACCZ)));
 		return accData;
+	}
+
+	@Override
+	public ContentValues getContentValues(AccData accData) {
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_TIME, accData.getDate().getTime());
+		cv.put(KEY_ACCX, accData.getAccX());
+		cv.put(KEY_ACCY, accData.getAccY());
+		cv.put(KEY_ACCZ, accData.getAccZ());
+		return cv;
 	}
 }

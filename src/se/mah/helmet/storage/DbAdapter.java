@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.mah.helmet.entity.Contact;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -51,6 +52,9 @@ public abstract class DbAdapter<T> {
 			db.execSQL(LocDbAdapter.TABLE_LOC_CREATE);
 			Log.i(TAG, "Created database " + DB_NAME + "."
 					+ LocDbAdapter.TABLE_LOC + ".");
+			db.execSQL(AlarmDbAdapter.TABLE_ALARM_CREATE);
+			Log.i(TAG, "Created database " + DB_NAME + "."
+					+ LocDbAdapter.TABLE_LOC + ".");
 		}
 
 		@Override
@@ -61,6 +65,7 @@ public abstract class DbAdapter<T> {
 			db.execSQL("DROP TABLE IF EXISTS " + AccDbAdapter.TABLE_ACC);
 			db.execSQL("DROP TABLE IF EXISTS " + LocDbAdapter.TABLE_LOC);
 			db.execSQL("DROP TABLE IF EXISTS " + TripDbAdapter.TABLE_TRIP);
+			db.execSQL("DROP TABLE IF EXISTS " + AlarmDbAdapter.TABLE_ALARM);
 			onCreate(db);
 		}
 	}
@@ -124,6 +129,8 @@ public abstract class DbAdapter<T> {
 	 * @return
 	 */
 	public abstract T getObject(Cursor cursor);
+	
+	public abstract ContentValues getContentValues(T object);
 
 	public T getObject(long id) {
 		return getObject(get(id));
@@ -175,5 +182,9 @@ public abstract class DbAdapter<T> {
 	public Cursor getAll() {
 		return getDb()
 				.query(getTableName(), null, null, null, null, null, null);
+	}
+	
+	public long insert(T object) {
+		return getDb().insert(getTableName(), null, getContentValues(object));
 	}
 }

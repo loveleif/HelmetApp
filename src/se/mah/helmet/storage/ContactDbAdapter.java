@@ -66,4 +66,12 @@ public class ContactDbAdapter extends DbAdapter<Contact> {
 			cursor.getString(cursor.getColumnIndex(KEY_NAME)),
 			cursor.getString(cursor.getColumnIndex(KEY_PHONE)));
 	}
+
+	@Override
+	public ContentValues getContentValues(Contact contact) {
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_NAME, contact.getName());
+		cv.put(KEY_PHONE, contact.getPhone());
+		return cv;
+	}
 }

@@ -89,4 +89,18 @@ public class LocDbAdapter extends DbAdapter<Location> {
 		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));
 		return loc;
 	}
+
+	@Override
+	public ContentValues getContentValues(Location loc) {
+		ContentValues cv = new ContentValues(7);
+		cv.put(KEY_TIME, loc.getTime());
+		cv.put(KEY_LAT, loc.getLatitude());
+		cv.put(KEY_LONG, loc.getLongitude());
+		cv.put(KEY_ALT, loc.getAltitude());
+		cv.put(KEY_ACCURACY, loc.getAccuracy());
+		cv.put(KEY_SPEED, loc.getSpeed());
+		cv.put(KEY_BEARING, loc.getBearing());
+		cv.put(KEY_PROVIDER, loc.getProvider());
+		return cv;
+	}
 }
