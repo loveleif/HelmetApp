@@ -9,9 +9,11 @@ import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.AccDbAdapter;
 import se.mah.helmet.storage.AlarmDbAdapter;
 import se.mah.helmet.storage.ContactDbAdapter;
+import se.mah.helmet.storage.LocDbAdapter;
 import android.app.Service;
 import android.content.Intent;
 import android.database.SQLException;
+import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -28,6 +30,7 @@ public class DataRecieve extends Service {
 	private ContactDbAdapter contactDb;
 	private AccDbAdapter accDb;
 	private AlarmDbAdapter alarmDb;
+	private LocDbAdapter locDb;
 	
 	@Override
 	public void onCreate() {
@@ -39,6 +42,8 @@ public class DataRecieve extends Service {
 		contactDb.open();
 		alarmDb = new AlarmDbAdapter(getApplicationContext());
 		alarmDb.open();
+		locDb = new LocDbAdapter(getApplicationContext());
+		locDb.open();
 	}
 	
 	@Override
@@ -89,8 +94,7 @@ public class DataRecieve extends Service {
 			return RECIEVE_FAIL;
 		}
 		
-		// TODO:
-		//accDb.insertData(new Date().toString(), accX, accY, accZ);
+		//accDb.insertData();
 		return RECIEVE_OK;
 	}
 
@@ -118,7 +122,9 @@ public class DataRecieve extends Service {
 	
 	private void sendAlarm() {
 		Log.i(TAG, "About to send alarm.");
-		String alarmMsg = "Help me Obi-Wan. You're my only hope. ";
+		String alarmMsg = "Help me Obi-Wan. You're my only hope.";
+		Location loc = locDb.getLastObject();
+		alarmMsg += " Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude();
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
 		

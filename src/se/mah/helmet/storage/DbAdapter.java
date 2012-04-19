@@ -187,4 +187,12 @@ public abstract class DbAdapter<T> {
 	public long insert(T object) {
 		return getDb().insert(getTableName(), null, getContentValues(object));
 	}
+	
+	public T getLastObject() {
+		Cursor cursor = getDb().query(getTableName(), null,
+				null, null, null, null,
+				getPrimaryKeyColumnName() + " desc", "1");
+		cursor.moveToFirst();
+		return getObject(cursor);
+	}
 }

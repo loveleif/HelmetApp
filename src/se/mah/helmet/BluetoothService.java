@@ -226,7 +226,7 @@ public class BluetoothService extends Service {
 					Log.d(TAG, "BT Data: " + data);
 					Intent intent = new Intent(context, DataRecieve.class);
 					intent.putExtra(DataRecieve.JSON_DATA_KEY, data);
-					context.stopService(intent);
+					context.startService(intent);
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());
