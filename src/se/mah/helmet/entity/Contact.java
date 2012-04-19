@@ -1,10 +1,12 @@
 package se.mah.helmet.entity;
 
 public class Contact {
+	private long id;
 	private String name;
 	private String phoneNbr;
 	
-	public Contact(String name, String phoneNbr) {
+	public Contact(long id, String name, String phoneNbr) {
+		this.id = id;
 		this.name = name;
 		this.phoneNbr = phoneNbr;
 	}

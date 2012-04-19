@@ -1,6 +1,6 @@
 package se.mah.helmet;
 
-import se.mah.helmet.storage.ContactsDbAdapter;
+import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,26 +22,26 @@ public class EmergencyContactsActivity extends ListActivity {
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 
-	private ContactsDbAdapter dbHelper;
+	private ContactDbAdapter dbHelper;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts_list);
-		dbHelper = new ContactsDbAdapter(this);
+		dbHelper = new ContactDbAdapter(this);
 		dbHelper.open();
 		fillData();
 		registerForContextMenu(getListView());
 	}
 
 	private void fillData() {
-		Cursor cursor = dbHelper.fetchAllContactsCursor();
+		Cursor cursor = dbHelper.getAll();
 		startManagingCursor(cursor);
 
 		// Create an array to specify the fields we want to display in the list
 		// (only TITLE)
-		String[] from = new String[] { ContactsDbAdapter.KEY_NAME };
+		String[] from = new String[] { ContactDbAdapter.KEY_NAME };
 
 		// and an array of the fields we want to bind those fields to (in this
 		// case just text1)
@@ -83,7 +83,7 @@ public class EmergencyContactsActivity extends ListActivity {
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 					.getMenuInfo();
-			dbHelper.deleteContact(info.id);
+			dbHelper.delete(info.id);
 			fillData();
 			return true;
 		}
@@ -99,7 +99,7 @@ public class EmergencyContactsActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent i = new Intent(this, ContactEdit.class);
-		i.putExtra(ContactsDbAdapter.KEY_ROWID, id);
+		i.putExtra(ContactDbAdapter.KEY_ROWID, id);
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 

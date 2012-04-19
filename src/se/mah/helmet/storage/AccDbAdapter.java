@@ -1,67 +1,33 @@
 package se.mah.helmet.storage;
 
-import android.content.ContentValues;
+import se.mah.helmet.entity.AccData;
 import android.content.Context;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.database.Cursor;
 
 /**
  * Preliminary database adapter for storing accelerometer data in a SQLite
  * database.
  */
-public class AccDbAdapter {
-	// TODO Implement syncing features with server.
-
-	public static final String DB_NAME = "helmet_db";
-	public static final int DB_VERSION = 1;
-
+public class AccDbAdapter extends DbAdapter<AccData> {
 	private static final String TAG = AccDbAdapter.class.getSimpleName();
 
-	private final Context mCtx;
-	private DatabaseHelper mDbHelper;
-	private SQLiteDatabase mDb;
-
+	// Remember to increment versionnumber in DbAdapter when you make changes
 	public static final String TABLE_ACC = "acc";
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_TIME = "time";
 	public static final String KEY_ACCX = "acc_x";
 	public static final String KEY_ACCY = "acc_y";
 	public static final String KEY_ACCZ = "acc_z";
-	private static final String TABLE_ACC_CREATE = 
+	public static final String KEY_TRIP_ID = "trip_id";
+	public static final String TABLE_ACC_CREATE = 
 			"CREATE TABLE " + TABLE_ACC	+ "(" 
 			+ KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_TIME + " text not null," 
+			+ KEY_TIME + " integer not null," 
 			+ KEY_ACCX + " real," 
 			+ KEY_ACCY + " real," 
-			+ KEY_ACCZ + " real"
+			+ KEY_ACCZ + " real,"
+			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ") not null"
 			+ ")";
-
-	/**
-	 * SQLiteOpenHelper for the AccDbAdapter
-	 */
-	private static class DatabaseHelper extends SQLiteOpenHelper {
-
-		DatabaseHelper(Context context) {
-			super(context, DB_NAME, null, DB_VERSION);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(TABLE_ACC_CREATE);
-			Log.i(TAG, "Created database " + DB_NAME + ".");
-
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-					+ newVersion + ", which will destroy all old data.");
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACC);
-			onCreate(db);
-		}
-	}
 
 	/**
 	 * Constructor - takes the context to allow the database to be
@@ -70,68 +36,44 @@ public class AccDbAdapter {
 	 * @param ctx
 	 *            the Context within which to work
 	 */
-	public AccDbAdapter(Context ctx) {
-		this.mCtx = ctx;
+	public AccDbAdapter(Context context) {
+		super(context);
 	}
-
-	/**
-	 * Open the database. If it cannot be opened, try to create a new instance
-	 * of the database. If it cannot be created, throw SQLException.
-	 * 
-	 * @return this (self reference, allowing this to be chained in an
-	 *         initialization call)
-	 * @throws SQLException
-	 *             if the database could be neither opened or created
-	 */
-	public AccDbAdapter open() throws SQLException {
-		mDbHelper = new DatabaseHelper(mCtx);
-		mDb = mDbHelper.getWritableDatabase();
-		return this;
-	}
-
-	/**
-	 * Close the database.
-	 */
-	public void close() {
-		mDb.close();
-	}
-
-	/**
-	 * Old insertion method, less effective.
-	 * Insert accelerometer data to database.
-	 * 
-	 * @param time
-	 * @param accX
-	 * @param accY
-	 * @param accZ
-	 * @return the row ID of the newly inserted row, or -1 if an error occurred
-	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
-	 *
-	public long insertData(String time, double accX, double accY,
-			double accZ) {
-		ContentValues values = new ContentValues(4);
-		values.put(KEY_TIME, time);
-		values.put(KEY_ACCX, accX);
-		values.put(KEY_ACCY, accY);
-		values.put(KEY_ACCZ, accZ);
-
-		return mDb.insert(TABLE_ACC, null, values);
-	}
-	*/
 	
 	/**
-	 * Insert accelerometer data to database.
+	 * Insert accelerometer data to database. Time will be current time.
 	 * 
 	 * @param time
 	 * @param accX
 	 * @param accY
 	 * @param accZ
 	 */
-	public void insertData(String time, double accX, double accY, double accZ) {
-		mDb.execSQL(
+	public void insertData(long tripId, double accX, double accY, double accZ) {
+		getDb().execSQL(
 			"INSERT INTO " + TABLE_ACC +
-			" (" + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
+			" (" + KEY_TRIP_ID + "," + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
 			" VALUES " +
-			" (\"" + time + "\"," + accX + "," + accY + "," + accZ + ");");
+			" (" + tripId + ",strftime('%s', 'now')," + accX + "," + accY + "," + accZ + ");");
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_ACC;
+	}
+
+	@Override
+	public String getPrimaryKeyColumnName() {
+		return KEY_ROWID;
+	}
+
+	@Override
+	public AccData getObject(Cursor cursor) {
+		AccData accData = new AccData(
+			cursor.getLong(cursor.getColumnIndex(KEY_ROWID)),
+			cursor.getLong(cursor.getColumnIndex(KEY_TIME)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCX)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCY)),
+			cursor.getDouble(cursor.getColumnIndex(KEY_ACCZ)));
+		return accData;
 	}
 }

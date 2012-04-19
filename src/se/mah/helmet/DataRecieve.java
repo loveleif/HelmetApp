@@ -6,7 +6,7 @@ import org.json.JSONTokener;
 
 import se.mah.helmet.entity.Contact;
 import se.mah.helmet.storage.AccDbAdapter;
-import se.mah.helmet.storage.ContactsDbAdapter;
+import se.mah.helmet.storage.ContactDbAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ public class DataRecieve extends Activity {
 	private static final String TAG = DataRecieve.class.getSimpleName();
 	private static final int ALARM_SEND_TIMEOUT_REQUEST = 1;
 	
-	private final ContactsDbAdapter contactDb;
+	private final ContactDbAdapter contactDb;
 	private final AccDbAdapter accDb;
 	private final Context context;
 
@@ -27,7 +27,7 @@ public class DataRecieve extends Activity {
 		this.context = context;
 		accDb = new AccDbAdapter(context);
 		accDb.open();
-		contactDb = new ContactsDbAdapter(context);
+		contactDb = new ContactDbAdapter(context);
 		contactDb.open();
 	}
 	
@@ -85,7 +85,7 @@ public class DataRecieve extends Activity {
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
 		
-		for (Contact contact : contactDb.fetchAllContacts()) {
+		for (Contact contact : contactDb.getAllObjects()) {
 			// VARNING! Kommentera denna raden efter varje test
 			/*SmsManager.getDefault().sendTextMessage(
 					contact.getPhoneNbr(), 

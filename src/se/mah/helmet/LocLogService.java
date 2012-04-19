@@ -1,6 +1,9 @@
 package se.mah.helmet;
 
+import java.util.Date;
+
 import se.mah.helmet.storage.LocDbAdapter;
+import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -18,37 +21,39 @@ public class LocLogService extends Service {
 	public static final String KEY_MIN_DISTANCE = "minDistance";
 	public static final long DEFAULT_MIN_TIME = 5000;
 	public static final float DEFAULT_MIN_DISTANCE = 1;
+	private static final String KEY_TRIP_ID = "tripId";
 	private LocationManager lm;
 	private LocDbAdapter db = null;
-	
+	private long tripId;
+
 	private class LocLogLocationListener implements LocationListener {
 
-		//@Override
+		// @Override
 		public void onLocationChanged(Location location) {
 			if (location == null)
 				return;
-			db.insertLocation(location);
+			db.insertLocation(tripId, location);
 			Log.d(TAG, "Logged " + location.toString());
 		}
 
-		//@Override
+		// @Override
 		public void onProviderDisabled(String provider) {
-			Log.w(TAG, provider + " disabled by user, position logging cancelled.");
+			Log.w(TAG, provider
+					+ " disabled by user, position logging cancelled.");
 			// TODO Do more?
 		}
 
-		//@Override
+		// @Override
 		public void onProviderEnabled(String arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
-		//@Override
+		// @Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 			// TODO Auto-generated method stub
-			
-		}
 
+		}
 
 	}
 
@@ -56,66 +61,72 @@ public class LocLogService extends Service {
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
-	
+
 	@Override
-    public void onCreate() {
+	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, "Created service.");
-		// TODO 
 	}
-	
+
 	@Override
-    public int onStartCommand(Intent intent, int flags, int startId) throws SQLException {
-        super.onStartCommand(intent, flags, startId);
+	public int onStartCommand(Intent intent, int flags, int startId)
+			throws SQLException {
+		super.onStartCommand(intent, flags, startId);
 		Log.d(TAG, "Received start id " + startId + ": " + intent);
-		
+
+		tripId = intent.getLongExtra(KEY_TRIP_ID, -1);
+
 		// Open database
 		// TODO Handle exceptions differently?
-		db  = new LocDbAdapter(getApplicationContext());
+		db = new LocDbAdapter(getApplicationContext());
 		db.open();
-		
+
 		// Start logging
 		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(
-        		LocationManager.GPS_PROVIDER, 
-        		intent.getLongExtra(KEY_MIN_TIME, DEFAULT_MIN_TIME), 
-        		intent.getFloatExtra(KEY_MIN_DISTANCE, DEFAULT_MIN_DISTANCE), 
-        		new LocLogLocationListener());
-        Log.d(TAG, "Location logging started.");
-        
-        return START_STICKY;
+		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				intent.getLongExtra(KEY_MIN_TIME, DEFAULT_MIN_TIME),
+				intent.getFloatExtra(KEY_MIN_DISTANCE, DEFAULT_MIN_DISTANCE),
+				new LocLogLocationListener());
+		Log.d(TAG, "Location logging started.");
+
+		return START_STICKY;
 	}
-	
+
 	@Override
-    public void onDestroy() {
+	public void onDestroy() {
 		super.onDestroy();
-		
+
 		// TODO Handle exception?
 		db.close();
-		
+
 		Log.d(TAG, "Destroyed service.");
 	}
-	
+
 	/**
 	 * Convenience method for creating an Intent that can start the service.
 	 * 
-	 * @param context Context within wich the Serivce should run
-	 * @param minTime minumum time in ms between location updates
-	 * @param minDistance minimum distance in m between location updates
+	 * @param context
+	 *            Context within wich the Serivce should run
+	 * @param minTime
+	 *            minumum time in ms between location updates
+	 * @param minDistance
+	 *            minimum distance in m between location updates
 	 * @return Intent that can be used to start this Service.
 	 */
-	public static Intent genStartIntent(Context context, long minTime, float minDistance) {
-        final Intent intent = new Intent(context, LocLogService.class);
-        
-        Bundle bundle = new Bundle(2);
-        bundle.putLong(LocLogService.KEY_MIN_TIME, minTime);
-        bundle.putFloat(LocLogService.KEY_MIN_DISTANCE, minDistance);
+	public static Intent genStartIntent(Context context, long tripId,
+			long minTime, float minDistance) {
+		final Intent intent = new Intent(context, LocLogService.class);
+
+		Bundle bundle = new Bundle(2);
+		bundle.putLong(LocLogService.KEY_TRIP_ID, tripId);
+		bundle.putLong(LocLogService.KEY_MIN_TIME, minTime);
+		bundle.putFloat(LocLogService.KEY_MIN_DISTANCE, minDistance);
 		intent.putExtras(bundle);
-		
-        return intent;
+
+		return intent;
 	}
-	
-	public static Intent genStartIntent(Context context) {
-		return genStartIntent(context, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
+
+	public static Intent genStartIntent(Context context, long tripId) {
+		return genStartIntent(context, tripId, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 	}
 }
