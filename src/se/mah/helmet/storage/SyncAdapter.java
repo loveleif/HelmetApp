@@ -57,7 +57,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
 		
 		
-		httpClient.execute(request)
+		//httpClient.execute(request)
 		return -1;
 	}
 }

@@ -30,8 +30,9 @@ public class LocDbAdapter extends DbAdapter<Location> {
 			+ KEY_ACCURACY + " real," 
 			+ KEY_SPEED + " real," 
 			+ KEY_BEARING + " real," 
-			+ KEY_PROVIDER + "text"
-			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ") not null"
+			+ KEY_PROVIDER + " text,"
+			+ KEY_TRIP_ID + " integer,"
+			+ "foreign key(" + KEY_TRIP_ID + ") references " + TripDbAdapter.TABLE_TRIP + "(" + TripDbAdapter.KEY_ROWID + ")"
 			+ ")";
 
 	/**
