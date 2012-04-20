@@ -17,6 +17,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -54,9 +55,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		// TODO Auto-generated method stub
 	}
 
-	private void syncTrip(String userName) {
+	private void syncTrips(String userName) {
 		long lastIdOnServer = getLastIdOnServer(TripDbAdapter.TABLE_TRIP);
-		// tripDb.fetchAllWhere
+		TripDbAdapter tripDb = new TripDbAdapter(context);
+		
+		Cursor cursor = tripDb.getAllSinceId(lastIdOnServer, null);
 		// TODO
 	}
 	
@@ -72,7 +75,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private long getLastIdOnServer(String table) {
 		String resourcePath;
 		if (table == TripDbAdapter.TABLE_TRIP)
-			resourcePath = "/users/" + user + "/trips/last";
+			resourcePath = "/users/" + user + "/trips/last/";
 		else
 			return -1;
 		HttpUriRequest request = new HttpGet(domain + resourcePath);
@@ -81,13 +84,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		HttpResponse response;
 		InputStream is = null;
 		int size;
+		long lastId;
 		try {
 			response = httpClient.execute(request);
 			is = response.getEntity().getContent();
 			size = is.read(buffer);
-		} catch (IOException e) {
+			lastId = Long.parseLong(new String(buffer, 0, size));
+		} catch (Exception e) {
 			Log.e(TAG, "Http request failed: " + request);
-			return -1;
+			return Long.MAX_VALUE;
 		} finally {
 			try {
 				is.close();
@@ -95,7 +100,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				Log.e(TAG, "Failed to close input stream for http request.");
 			}
 		}
-		return Long.parseLong(new String(buffer, 0, size));
+		return lastId;
+		
 		
 	}
 }
