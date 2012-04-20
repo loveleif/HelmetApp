@@ -32,6 +32,7 @@
         </service>
         <activity android:name="AlarmAcknowledgeActivity"></activity>
         <service android:name="DataRecieve"></service>
+        <service android:name="HelmetService"></service>
     </application>
 
 </manifest>

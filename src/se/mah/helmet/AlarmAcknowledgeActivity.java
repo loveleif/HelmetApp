@@ -23,8 +23,6 @@ public class AlarmAcknowledgeActivity extends Activity {
 	
 	private Button btnCancel;
 	private TextView txtvCountDown;
-
-	private Intent sendAlarmIntent;
 	
 	private Handler handler = new Handler();
 	private Runnable update = new Runnable() {
@@ -32,6 +30,10 @@ public class AlarmAcknowledgeActivity extends Activity {
 			time = SystemClock.uptimeMillis() - startTime;
 			if (time >= totalTime) {
 				Log.d(TAG, "About to send alarm.");
+				Intent sendAlarmIntent = new Intent(getApplicationContext(), HelmetService.class);
+				sendAlarmIntent.setAction(HelmetService.ACTION_SEND_ALARM);
+				sendAlarmIntent.putExtra(HelmetService.ALARM_ID_KEY, getIntent().getLongExtra(HelmetService.ALARM_ID_KEY, -1));
+
 				startService(sendAlarmIntent);
 				finish();
 			} else {
@@ -48,10 +50,6 @@ public class AlarmAcknowledgeActivity extends Activity {
 		
 		btnCancel = (Button) findViewById(R.id.btnAlarmAcknowledge);
 		txtvCountDown = (TextView) findViewById(R.id.txtvAlarmCountDown);
-		
-		sendAlarmIntent = new Intent(getApplicationContext(), DataRecieve.class);
-		sendAlarmIntent.setAction(DataRecieve.ACTION_SEND_ALARM);
-		sendAlarmIntent.putExtra(DataRecieve.ALARM_ID_KEY, getIntent().getLongExtra(DataRecieve.ALARM_ID_KEY, -1));
 		
 		btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

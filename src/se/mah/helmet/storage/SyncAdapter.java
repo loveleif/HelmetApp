@@ -78,7 +78,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		
 		HttpResponse response;
 		try {
-			HttpResponse response = httpClient.execute(request);
+			response = httpClient.execute(request);
 		} catch (IOException e) {
 			Log.e(TAG, "Http request failed: " + request);
 			return -1;

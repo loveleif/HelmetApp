@@ -5,13 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
 /**
@@ -21,13 +17,12 @@ import android.util.Log;
  * http://developer.android.com/resources/samples/BluetoothChat
  * 
  */
-public class BluetoothService extends Service {
+public abstract class BluetoothService {
 	private static final String TAG = BluetoothService.class.getSimpleName();
 
 	private final BluetoothAdapter adapter;
 	private ConnectThread connectThread;
 	private ConnectedThread connectedThread;
-	private final Context context;
 	// The "well known SPP UUID", kanske inte stämmer
 	private static final UUID MY_UUID = UUID
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -42,8 +37,7 @@ public class BluetoothService extends Service {
 	
 	private static final byte END_OF_TRANSMISSION = 4;
 
-	public BluetoothService(Context context) {
-		this.context = context;
+	public BluetoothService() {
 		adapter = BluetoothAdapter.getDefaultAdapter();
 		state = STATE_OFF;
 	}
@@ -117,11 +111,11 @@ public class BluetoothService extends Service {
 		}
 	}
 	
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
+	public void writeData(byte[] data) {
+		connectedThread.write(data);
 	}
+	
+	public abstract void recieveData(byte[] buffer);
 
 	/**
 	 * Thread for establishing a connection to a BluetoothDevice.
@@ -145,7 +139,7 @@ public class BluetoothService extends Service {
 
 		@Override
 		public void run() {
-			Log.e(TAG, "Connecting to BluetoothDevice...");
+			Log.d(TAG, "Connecting to BluetoothDevice...");
 			setName("BluetoothConnectThread");
 
 			// Always cancel discovery because it will slow down a connection
@@ -206,6 +200,7 @@ public class BluetoothService extends Service {
 		 */
 		@Override
 		public void run() {
+			Log.d(TAG, "Listening on Bluetooth channel.");
 			byte[] buffer = new byte[bufferSize];
 			int size = 0;
 			String data;
@@ -214,19 +209,23 @@ public class BluetoothService extends Service {
 			while (true) {
 				try {
 					// Read from input to buffer until last byte is END_OF_TRANSMISSION
+					
 					offset = 0;
 					do {
 						size = input.read(buffer, offset, buffer.length - offset);
+						Log.d(TAG, "BT: Read " + size + " bytes.");
 						if (size > 0)
 							offset += size;
 					} while (buffer[offset - 1] != END_OF_TRANSMISSION);
-
-					// Temp hantering
+					recieveData(buffer);
+					// TODO Ta bort
+					/*
 					data = new String(buffer, 0, offset - 1);
 					Log.d(TAG, "BT Data: " + data);
 					Intent intent = new Intent(context, DataRecieve.class);
 					intent.putExtra(DataRecieve.JSON_DATA_KEY, data);
 					context.startService(intent);
+					*/
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());
