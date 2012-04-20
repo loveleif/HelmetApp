@@ -79,7 +79,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
 		
 		HttpResponse response;
-		InputStream is;
+		InputStream is = null;
 		int size;
 		try {
 			response = httpClient.execute(request);
@@ -88,7 +88,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (IOException e) {
 			Log.e(TAG, "Http request failed: " + request);
 			return -1;
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				Log.e(TAG, "Failed to close input stream for http request.");
+			}
 		}
 		return Long.parseLong(new String(buffer, 0, size));
+		
 	}
 }
