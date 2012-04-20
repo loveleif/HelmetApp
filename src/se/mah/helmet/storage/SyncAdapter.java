@@ -1,6 +1,7 @@
 package se.mah.helmet.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private String user;
 	private static final String ACCEPT_HEADER_KEY = "Accept";
 	private static final String TYPE_TEXT_PLAIN = "text/plain";
+	private byte[] buffer = new byte[8*1024];
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -77,13 +79,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
 		
 		HttpResponse response;
+		InputStream is;
+		int size;
 		try {
 			response = httpClient.execute(request);
+			is = response.getEntity().getContent();
+			size = is.read(buffer);
 		} catch (IOException e) {
 			Log.e(TAG, "Http request failed: " + request);
 			return -1;
 		}
-		//response.getEntity().getContent().
-		return -1;
+		return Long.parseLong(new String(buffer, 0, size));
 	}
 }
