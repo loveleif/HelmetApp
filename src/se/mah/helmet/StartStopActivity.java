@@ -41,7 +41,7 @@ public class StartStopActivity extends Activity {
 		Button btnAlarmTest = (Button) findViewById(R.id.btnTestAlarm);
 		btnAlarmTest.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO
+				startActivity(new Intent(getApplicationContext(), AlarmAcknowledgeActivity.class));
 			}
 		});
 

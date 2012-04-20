@@ -97,6 +97,7 @@ public abstract class BluetoothService {
 	}
 	
 	public void disconnect() {
+		Log.i(TAG, "Disconnecting bluetooth.");
 		state = STATE_OFF;
 		
 		// Cancel any ongoing connection attemps
@@ -115,7 +116,7 @@ public abstract class BluetoothService {
 		connectedThread.write(data);
 	}
 	
-	public abstract void recieveData(byte[] buffer);
+	public abstract void recieveData(byte[] buffer, int size);
 
 	/**
 	 * Thread for establishing a connection to a BluetoothDevice.
@@ -217,7 +218,7 @@ public abstract class BluetoothService {
 						if (size > 0)
 							offset += size;
 					} while (buffer[offset - 1] != END_OF_TRANSMISSION);
-					recieveData(buffer);
+					recieveData(buffer, offset - 1);
 					// TODO Ta bort
 					/*
 					data = new String(buffer, 0, offset - 1);

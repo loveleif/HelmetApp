@@ -10,6 +10,7 @@ import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Contact;
 import android.database.SQLException;
 import android.location.Location;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 public abstract class DataRecieve {
@@ -70,6 +71,8 @@ public abstract class DataRecieve {
 		} catch (SQLException e) {
 			Log.e(TAG, "Unable to save alarm to database");
 		}
+		
+		acknowledgeAlarm();
 
 	    // TODO Skicka larm till server
 		// Se http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
@@ -77,24 +80,31 @@ public abstract class DataRecieve {
 	}
 	
 	public abstract long saveAlarm(Alarm alarm);
+	public abstract void acknowledgeAlarm();
 	
 	public void sendAlarm(Alarm alarm) {
 		Log.i(TAG, "About to send alarm.");
 		String alarmMsg = "Help me Obi-Wan. You're my only hope.";
-		Location loc = getLastLocation();
-		alarmMsg += " Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude();
+		
+		Location loc = null;
+		try {
+			loc = getLastLocation();
+		} catch (Exception e) {	}
+		
+		if (loc != null)
+			alarmMsg += " Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude();
 		Log.d(TAG, "Alarm message: " + alarmMsg);
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?
 		
 		for (Contact contact : getAllContacts()) {
 			// VARNING! Kommentera denna raden efter varje test
-			/*SmsManager.getDefault().sendTextMessage(
+			SmsManager.getDefault().sendTextMessage(
 					contact.getPhoneNbr(), 
 					null, // SC adress
 					alarmMsg, 
 					null, 
-					null);*/
+					null);
 			Log.i(TAG, "Sending alarm to " + contact.toString());
 		}
 	}

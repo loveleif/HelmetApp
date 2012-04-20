@@ -22,7 +22,7 @@ public class HelmetService extends Service {
 	public static final String ACTION_ACKNOWLEDGE_ALARM = "se.mah.helmet.ACTION_ACKNOWLEDGE_ALARM";
 	public static final String ACTION_SEND_ALARM = "se.mah.ACTION_SEND_ALARM";
 	public static final String ACTION_START_BLUETOOTH_SERVICE = "se.mah.helmet.ACTION_START_BLUETOOTH_SERVICE";
-	public static final String ACTION_STOP_BLUETOOTH_SERVICE = "se.mah.helmet.ACTION_START_BLUETOOTH_SERVICE";
+	public static final String ACTION_STOP_BLUETOOTH_SERVICE = "se.mah.helmet.ACTION_STOP_BLUETOOTH_SERVICE";
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
 	public static final String BLUETOOTH_MAC_ADRESS_KEY = "se.mah.helmet.BLUETOOTH_MAC_ADRESS_KEY";
@@ -32,10 +32,12 @@ public class HelmetService extends Service {
 	private AlarmDbAdapter alarmDb;
 	private LocDbAdapter locDb;
 	
+	private boolean alarmActive = true;
+	
 	private BluetoothService bluetooth = new BluetoothService() {
 		@Override
-		public void recieveData(byte[] buffer) {
-			String data = new String(buffer);
+		public void recieveData(byte[] buffer, int size) {
+			String data = new String(buffer, 0, size);
 			Log.d(TAG, "BT recieve: " + data);
 			dataRecieve.recieve(data);
 		}
@@ -61,7 +63,22 @@ public class HelmetService extends Service {
 		public Location getLastLocation() {
 			return locDb.getLastObject();
 		}
+
+		@Override
+		public void acknowledgeAlarm() {
+			Log.d(TAG, "About to open AlarmAcknowledgeActivity.");
+			
+			testM();
+			
+		}
 	};
+	
+	private void testM() {
+		startActivity(new Intent(
+				getApplicationContext(), AlarmAcknowledgeActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+		);
+	}
 	
 	@Override
 	public void onCreate() {
@@ -102,8 +119,16 @@ public class HelmetService extends Service {
 	}
 
 	private void sendAlarm(Intent intent) {
-		dataRecieve.sendAlarm(
-			alarmDb.getObject(intent.getLongExtra(ALARM_ID_KEY, -1)));
+		Alarm alarm = null;
+		try {
+		alarm = alarmDb.getObject(intent.getLongExtra(ALARM_ID_KEY, -1));
+		} catch (Exception e) {	}
+		
+		if (alarmActive) {
+			dataRecieve.sendAlarm(alarm);
+			// TODO Temp lösning
+			alarmActive = false;
+		}
 	}
 
 	private void acknowledgeAlarm(Intent intent) {
