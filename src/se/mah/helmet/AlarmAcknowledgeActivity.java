@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Activity that gives the user a certain amount of time to cancel an alarm.
+ *
+ */
 public class AlarmAcknowledgeActivity extends Activity {
 	public static final String TAG = AlarmAcknowledgeActivity.class.getSimpleName();
 
@@ -25,16 +29,16 @@ public class AlarmAcknowledgeActivity extends Activity {
 	private TextView txtvCountDown;
 	
 	private Handler handler = new Handler();
+	
 	private Runnable update = new Runnable() {
 		public void run() {
 			time = SystemClock.uptimeMillis() - startTime;
 			if (time >= totalTime) {
 				Log.d(TAG, "About to send alarm.");
-				Intent sendAlarmIntent = new Intent(getApplicationContext(), HelmetService.class);
-				sendAlarmIntent.setAction(HelmetService.ACTION_SEND_ALARM);
-				sendAlarmIntent.putExtra(HelmetService.ALARM_ID_KEY, getIntent().getLongExtra(HelmetService.ALARM_ID_KEY, -1));
-
-				startService(sendAlarmIntent);
+				startService(HelmetService.newSendAlarmIntent(
+						getApplicationContext(), 
+						getIntent().getLongExtra(HelmetService.ALARM_ID_KEY, -1)
+						));
 				finish();
 			} else {
 				txtvCountDown.setText((totalTime - time) / 1000 + " seconds left to cancel.");

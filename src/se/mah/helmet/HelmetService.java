@@ -140,7 +140,20 @@ public class HelmetService extends Service {
 						.setAction(ACTION_START)
 						.putExtra(BLUETOOTH_MAC_ADRESS_KEY, bluetoothMacAdress);
 	}
-	
+
+	/**
+	 * Convenience method for creating a start intent with action ACTION_SEND_ALARM.
+	 * 
+	 * @param context context for service
+	 * @param alarmId alarm id
+	 * @return
+	 */
+	public static Intent newSendAlarmIntent(Context context, long alarmId) {
+		return new Intent(context, HelmetService.class)
+						.setAction(ACTION_SEND_ALARM)
+						.putExtra(ALARM_ID_KEY, alarmId);
+	}
+
 	private void pause() {
 		bluetooth.disconnect();
 		stopService(new Intent(getApplicationContext(), LocLogService.class));

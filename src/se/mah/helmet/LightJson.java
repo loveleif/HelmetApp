@@ -11,15 +11,12 @@ public class LightJson {
 		return new LightJson();
 	}
 	
-	
 	public LightJson put(CharSequence key, CharSequence value) {
 		if (finalized)
 			throw new RuntimeException("Finalized.");
 		
-		if (!firstValue)
-			json.append(',');
-		else
-			firstValue = false;
+		if (!firstValue) json.append(',');
+		else firstValue = false;
 		
 		json.append('"');
 		json.append(key);
