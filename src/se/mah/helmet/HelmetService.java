@@ -28,17 +28,22 @@ public class HelmetService extends Service {
 	public static final String ACTION_PAUSE = "se.mah.helmet.ACTION_STOP";
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
-	public static final String BLUETOOTH_MAC_ADRESS_KEY = "se.mah.helmet.BLUETOOTH_MAC_ADRESS_KEY";
-
+	public static final String BLUETOOTH_MAC_ADRESS_KEY = "bt_mac_adress";
 	private static final String TRIP_ID_KEY = "trip_id";
 
+	// Database access
 	private ContactDbAdapter contactDb;
 	private AccDbAdapter accDb;
 	private AlarmDbAdapter alarmDb;
 	private LocDbAdapter locDb;
+	private TripDbAdapter tripDb;
 	
+	// TODO Temporary solution
 	private boolean alarmActive = true;
 	
+	/**
+	 * Handles bluetooth connecting, reading and writing.
+	 */
 	private BluetoothService bluetooth = new BluetoothService() {
 		@Override
 		public void recieveData(byte[] buffer, int size) {
@@ -48,6 +53,10 @@ public class HelmetService extends Service {
 		}
 	};
 
+	/**
+	 * Handles recieving data. From reading json strings to taking actions on
+	 * the read data.
+	 */
 	private DataRecieve dataRecieve = new DataRecieve() {
 		@Override
 		public void saveAccData(double accX, double accY, double accZ) {
@@ -72,22 +81,15 @@ public class HelmetService extends Service {
 		@Override
 		public void acknowledgeAlarm() {
 			Log.d(TAG, "About to open AlarmAcknowledgeActivity.");
-			
-			testM();
-			
+			startActivity(new Intent(
+					getApplicationContext(), AlarmAcknowledgeActivity.class)
+					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+			);
 		}
 	};
 
-	private TripDbAdapter tripDb;
 
 	private long tripId = -1;
-	
-	private void testM() {
-		startActivity(new Intent(
-				getApplicationContext(), AlarmAcknowledgeActivity.class)
-				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-		);
-	}
 	
 	@Override
 	public void onCreate() {
@@ -187,7 +189,6 @@ public class HelmetService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
