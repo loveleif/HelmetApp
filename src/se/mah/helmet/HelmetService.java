@@ -1,5 +1,6 @@
 package se.mah.helmet;
 
+import java.util.Date;
 import java.util.List;
 
 import se.mah.helmet.entity.Alarm;
@@ -8,6 +9,7 @@ import se.mah.helmet.storage.AccDbAdapter;
 import se.mah.helmet.storage.AlarmDbAdapter;
 import se.mah.helmet.storage.ContactDbAdapter;
 import se.mah.helmet.storage.LocDbAdapter;
+import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -26,6 +28,8 @@ public class HelmetService extends Service {
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
 	public static final String BLUETOOTH_MAC_ADRESS_KEY = "se.mah.helmet.BLUETOOTH_MAC_ADRESS_KEY";
+
+	private static final String TRIP_ID_KEY = "trip_id";
 
 	private ContactDbAdapter contactDb;
 	private AccDbAdapter accDb;
@@ -72,6 +76,10 @@ public class HelmetService extends Service {
 			
 		}
 	};
+
+	private TripDbAdapter tripDb;
+
+	private long tripId = -1;
 	
 	private void testM() {
 		startActivity(new Intent(
@@ -90,6 +98,8 @@ public class HelmetService extends Service {
 		alarmDb.open();
 		locDb = new LocDbAdapter(getApplicationContext());
 		locDb.open();
+		tripDb = new TripDbAdapter(getApplicationContext());
+		tripDb.open();
 	}
 	
 	@Override
@@ -106,9 +116,14 @@ public class HelmetService extends Service {
 
 	private void stop() {
 		bluetooth.disconnect();
+		stopService(new Intent(getApplicationContext(), LocLogService.class));
 	}
 
 	private void start(Intent intent) {
+		// Create new trip
+		tripId  = tripDb.insertTrip(new Date().toString());
+		
+		// Start Bluetooth communications
 		BluetoothDevice device = 
 				BluetoothAdapter
 				.getDefaultAdapter()
@@ -116,6 +131,15 @@ public class HelmetService extends Service {
 						intent.getStringExtra(BLUETOOTH_MAC_ADRESS_KEY)
 				);
 		bluetooth.connect(device);
+		
+		// Start location logging
+		// TODO get constants from settings
+		startService(LocLogService.newStartIntent(
+				getApplicationContext(), // Context
+				tripId, // Trip id
+				5000, // Min time (ms)
+				100 // Min dist (m)
+			));
 	}
 
 	private void sendAlarm(Intent intent) {

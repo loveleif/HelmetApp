@@ -22,6 +22,7 @@ public class LocLogService extends Service {
 	private LocationManager lm;
 	private LocDbAdapter db = null;
 	private long tripId;
+	private LocationListener locListener;
 
 	private class LocLogLocationListener implements LocationListener {
 
@@ -78,12 +79,14 @@ public class LocLogService extends Service {
 		db = new LocDbAdapter(getApplicationContext());
 		db.open();
 
+		locListener = new LocLogLocationListener();
+		
 		// Start logging
 		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				intent.getLongExtra(KEY_MIN_TIME, DEFAULT_MIN_TIME),
 				intent.getFloatExtra(KEY_MIN_DISTANCE, DEFAULT_MIN_DISTANCE),
-				new LocLogLocationListener());
+				locListener);
 		Log.d(TAG, "Location logging started.");
 
 		return START_STICKY;
@@ -92,7 +95,8 @@ public class LocLogService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
+		lm.removeUpdates(locListener);
+		locListener = null;
 		// TODO Handle exception?
 		db.close();
 
@@ -110,11 +114,11 @@ public class LocLogService extends Service {
 	 *            minimum distance in m between location updates
 	 * @return Intent that can be used to start this Service.
 	 */
-	public static Intent genStartIntent(Context context, long tripId,
+	public static Intent newStartIntent(Context context, long tripId,
 			long minTime, float minDistance) {
 		final Intent intent = new Intent(context, LocLogService.class);
 
-		Bundle bundle = new Bundle(2);
+		Bundle bundle = new Bundle(3);
 		bundle.putLong(LocLogService.KEY_TRIP_ID, tripId);
 		bundle.putLong(LocLogService.KEY_MIN_TIME, minTime);
 		bundle.putFloat(LocLogService.KEY_MIN_DISTANCE, minDistance);
@@ -123,7 +127,7 @@ public class LocLogService extends Service {
 		return intent;
 	}
 
-	public static Intent genStartIntent(Context context, long tripId) {
-		return genStartIntent(context, tripId, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
+	public static Intent newStartIntent(Context context, long tripId) {
+		return newStartIntent(context, tripId, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 	}
 }
