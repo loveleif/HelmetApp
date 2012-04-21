@@ -1,7 +1,17 @@
 package se.mah.helmet;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.message.BasicHeader;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +44,44 @@ public class StartStopActivity extends Activity {
 		Button btnTest = (Button) findViewById(R.id.btnTest);
 		btnTest.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO
+				Runnable test = new Runnable() {
+					public void run() {
+						String resourcePath = "http://localhost:8080/HelmetServer/users/MrBrown/trips/last/source-id";
+						HttpUriRequest request = new HttpGet(resourcePath);
+						request.addHeader(new BasicHeader("Accept", "text/plain"));
+						
+						HttpClient httpClient = AndroidHttpClient.newInstance("HelmetAppSyncAdapter");
+						HttpResponse response = null;
+						try {
+							response = httpClient.execute(request);
+						} catch (IOException e) {
+							e.printStackTrace();
+							Log.e(TAG, "Http request failed: " + e.getMessage());
+						}
+						Log.d(TAG, "http response: " + response);
+						InputStream is = null;
+						int size = 0;
+						byte[] buff = new byte[20];
+						try {
+							is = response.getEntity().getContent();
+							size = is.read(buff);
+						} catch (IllegalStateException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						Log.i(TAG, "http read: ->" + new String(buff, 0, size) + "<-");
+					}
+					
+					
+					
+				};
+				Thread t = new Thread(test);
+				t.start();
+				
 			}
 		});
 
