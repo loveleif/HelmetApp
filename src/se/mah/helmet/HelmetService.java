@@ -66,19 +66,12 @@ public class HelmetService extends Service {
 
 		@Override
 		public void acknowledgeAlarm() {
-			Log.d(TAG, "About to open AlarmAcknowledgeActivity.");
-			
-			testM();
-			
-		}
-	};
-	
-	private void testM() {
-		startActivity(new Intent(
+			startActivity(new Intent(
 				getApplicationContext(), AlarmAcknowledgeActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 		);
-	}
+		}
+	};
 	
 	@Override
 	public void onCreate() {
