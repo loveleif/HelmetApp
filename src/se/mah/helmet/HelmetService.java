@@ -103,6 +103,17 @@ public class HelmetService extends Service {
 	}
 	
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		stop();
+		accDb = null;
+		contactDb = null;
+		alarmDb = null;
+		locDb = null;
+		tripDb = null;
+	}
+	
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		String action = intent.getAction();
 		
