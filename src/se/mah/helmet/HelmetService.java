@@ -49,8 +49,8 @@ public class HelmetService extends Service {
 
 	private DataRecieve dataRecieve = new DataRecieve() {
 		@Override
-		public void saveAccData(double x, double y, double z) {
-			//accDb.insertData(tripId, accX, accY, accZ);
+		public void saveAccData(double accX, double accY, double accZ) {
+			accDb.insertData(tripId, accX, accY, accZ);
 		}
 
 		@Override
