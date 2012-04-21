@@ -13,6 +13,7 @@ import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
@@ -24,7 +25,7 @@ public class HelmetService extends Service {
 	public static final String ACTION_ACKNOWLEDGE_ALARM = "se.mah.helmet.ACTION_ACKNOWLEDGE_ALARM";
 	public static final String ACTION_SEND_ALARM = "se.mah.ACTION_SEND_ALARM";
 	public static final String ACTION_START = "se.mah.helmet.ACTION_START";
-	public static final String ACTION_STOP = "se.mah.helmet.ACTION_STOP";
+	public static final String ACTION_PAUSE = "se.mah.helmet.ACTION_STOP";
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
 	public static final String BLUETOOTH_MAC_ADRESS_KEY = "se.mah.helmet.BLUETOOTH_MAC_ADRESS_KEY";
@@ -105,7 +106,7 @@ public class HelmetService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		stop();
+		pause();
 		accDb = null;
 		contactDb = null;
 		alarmDb = null;
@@ -120,12 +121,25 @@ public class HelmetService extends Service {
 		if (action.equals(ACTION_ACKNOWLEDGE_ALARM)) acknowledgeAlarm(intent);
 		else if (action.equals(ACTION_SEND_ALARM)) sendAlarm(intent);
 		else if (action.equals(ACTION_START)) start(intent);
-		else if (action.equals(ACTION_STOP)) stop();
+		else if (action.equals(ACTION_PAUSE)) pause();
 		
 		return START_STICKY;
 	};
-
-	private void stop() {
+	
+	/**
+	 * Convenience method for creating a start intent with action ACTION_START.
+	 * 
+	 * @param context context for service
+	 * @param bluetoothMacAdress mac adress of bluetooth device to connect to
+	 * @return
+	 */
+	public static Intent newStartIntent(Context context, String bluetoothMacAdress) {
+		return new Intent(context, HelmetService.class)
+						.setAction(ACTION_START)
+						.putExtra(BLUETOOTH_MAC_ADRESS_KEY, bluetoothMacAdress);
+	}
+	
+	private void pause() {
 		bluetooth.disconnect();
 		stopService(new Intent(getApplicationContext(), LocLogService.class));
 	}
