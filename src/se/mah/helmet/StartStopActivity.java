@@ -60,7 +60,7 @@ public class StartStopActivity extends Activity {
 				// TODO Tillfällig lösning för att testa. Skriv in MAC-adressen
 				// manuellt.
 				Intent hsIntent = new Intent(getApplicationContext(), HelmetService.class);
-				hsIntent.setAction(HelmetService.ACTION_START_BLUETOOTH_SERVICE);
+				hsIntent.setAction(HelmetService.ACTION_START);
 				hsIntent.putExtra(HelmetService.BLUETOOTH_MAC_ADRESS_KEY, "00:06:66:04:DC:0C");
 				startService(hsIntent);
 				txtvStatus.setText("Status: Connected");
@@ -70,7 +70,7 @@ public class StartStopActivity extends Activity {
 						"Disconnecting from device.", Toast.LENGTH_SHORT)
 						.show();
 				Intent hssIntent = new Intent(getApplicationContext(), HelmetService.class);
-				hssIntent.setAction(HelmetService.ACTION_STOP_BLUETOOTH_SERVICE);
+				hssIntent.setAction(HelmetService.ACTION_STOP);
 				startService(hssIntent);
 				txtvStatus.setText("Status: Disconnected");
 			}

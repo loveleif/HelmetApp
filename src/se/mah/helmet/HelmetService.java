@@ -21,8 +21,8 @@ public class HelmetService extends Service {
 	
 	public static final String ACTION_ACKNOWLEDGE_ALARM = "se.mah.helmet.ACTION_ACKNOWLEDGE_ALARM";
 	public static final String ACTION_SEND_ALARM = "se.mah.ACTION_SEND_ALARM";
-	public static final String ACTION_START_BLUETOOTH_SERVICE = "se.mah.helmet.ACTION_START_BLUETOOTH_SERVICE";
-	public static final String ACTION_STOP_BLUETOOTH_SERVICE = "se.mah.helmet.ACTION_STOP_BLUETOOTH_SERVICE";
+	public static final String ACTION_START = "se.mah.helmet.ACTION_START";
+	public static final String ACTION_STOP = "se.mah.helmet.ACTION_STOP";
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
 	public static final String BLUETOOTH_MAC_ADRESS_KEY = "se.mah.helmet.BLUETOOTH_MAC_ADRESS_KEY";
@@ -98,17 +98,17 @@ public class HelmetService extends Service {
 		
 		if (action.equals(ACTION_ACKNOWLEDGE_ALARM)) acknowledgeAlarm(intent);
 		else if (action.equals(ACTION_SEND_ALARM)) sendAlarm(intent);
-		else if (action.equals(ACTION_START_BLUETOOTH_SERVICE)) startBluetooth(intent);
-		else if (action.equals(ACTION_STOP_BLUETOOTH_SERVICE)) stopBluetooth();
+		else if (action.equals(ACTION_START)) start(intent);
+		else if (action.equals(ACTION_STOP)) stop();
 		
 		return START_STICKY;
 	};
 
-	private void stopBluetooth() {
+	private void stop() {
 		bluetooth.disconnect();
 	}
 
-	private void startBluetooth(Intent intent) {
+	private void start(Intent intent) {
 		BluetoothDevice device = 
 				BluetoothAdapter
 				.getDefaultAdapter()
