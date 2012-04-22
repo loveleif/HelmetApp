@@ -46,7 +46,7 @@ public class StartStopActivity extends Activity {
 			public void onClick(View v) {
 				Runnable test = new Runnable() {
 					public void run() {
-						String resourcePath = "http://localhost:8080/HelmetServer/users/MrBrown/trips/last/source-id";
+						String resourcePath = "http://10.0.2.2:8080/HelmetServer/users/MrBrown/trips/last/source-id";
 						HttpUriRequest request = new HttpGet(resourcePath);
 						request.addHeader(new BasicHeader("Accept", "text/plain"));
 						
