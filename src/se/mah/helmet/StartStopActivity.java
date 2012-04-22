@@ -46,38 +46,13 @@ public class StartStopActivity extends Activity {
 			public void onClick(View v) {
 				Runnable test = new Runnable() {
 					public void run() {
-						String resourcePath = "http://10.0.2.2:8080/HelmetServer/users/MrBrown/trips/last/source-id";
-						HttpUriRequest request = new HttpGet(resourcePath);
-						request.addHeader(new BasicHeader("Accept", "text/plain"));
-						
-						HttpClient httpClient = AndroidHttpClient.newInstance("HelmetAppSyncAdapter");
-						HttpResponse response = null;
-						try {
-							response = httpClient.execute(request);
-						} catch (IOException e) {
-							e.printStackTrace();
-							Log.e(TAG, "Http request failed: " + e.getMessage());
-						}
-						Log.d(TAG, "http response: " + response);
-						InputStream is = null;
-						int size = 0;
-						byte[] buff = new byte[20];
-						try {
-							is = response.getEntity().getContent();
-							size = is.read(buff);
-						} catch (IllegalStateException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						Log.i(TAG, "http read: ->" + new String(buff, 0, size) + "<-");
+						String get = HttpUtil.httpGet(
+								AndroidHttpClient.newInstance("TestClient"), 
+								"http://10.0.2.2:8080/HelmetServer/users/MrBrown/trips/last/source-id", 
+								"text/plain", 
+								new byte[30]);
+						Log.d(TAG, "http get: " + get);
 					}
-					
-					
-					
 				};
 				Thread t = new Thread(test);
 				t.start();
