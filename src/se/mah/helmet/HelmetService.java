@@ -19,6 +19,11 @@ import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * The main Service for the HelmetApp. Handles sending and recieving bluetooth data, saving
+ * data in the local database (via various DbAdapters) and sending alarms.
+ * 
+ */ 
 public class HelmetService extends Service {
 	private static final String TAG = HelmetService.class.getSimpleName();
 	
@@ -120,6 +125,8 @@ public class HelmetService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		String action = intent.getAction();
 		
+		// PLEASE NOTE! The following methods will make modifications to
+		// intent and re-use it to start other services.
 		if (action.equals(ACTION_ACKNOWLEDGE_ALARM)) acknowledgeAlarm(intent);
 		else if (action.equals(ACTION_SEND_ALARM)) sendAlarm(intent);
 		else if (action.equals(ACTION_START)) start(intent);

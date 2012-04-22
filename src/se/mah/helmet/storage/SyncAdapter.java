@@ -1,6 +1,7 @@
 package se.mah.helmet.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -16,6 +17,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,6 +32,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private String user;
 	private static final String ACCEPT_HEADER_KEY = "Accept";
 	private static final String TYPE_TEXT_PLAIN = "text/plain";
+	private byte[] buffer = new byte[8*1024];
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -52,9 +55,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		// TODO Auto-generated method stub
 	}
 
-	private void syncTrip(String userName) {
+	private void syncTrips(String userName) {
 		long lastIdOnServer = getLastIdOnServer(TripDbAdapter.TABLE_TRIP);
-		// tripDb.fetchAllWhere
+		TripDbAdapter tripDb = new TripDbAdapter(context);
+		
+		Cursor cursor = tripDb.getAllSinceId(lastIdOnServer, null);
 		// TODO
 	}
 	
@@ -70,20 +75,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private long getLastIdOnServer(String table) {
 		String resourcePath;
 		if (table == TripDbAdapter.TABLE_TRIP)
-			resourcePath = "/users/" + user + "/trips/last";
+			resourcePath = "/users/" + user + "/trips/last/";
 		else
 			return -1;
 		HttpUriRequest request = new HttpGet(domain + resourcePath);
 		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
 		
 		HttpResponse response;
+		InputStream is = null;
+		int size;
+		long lastId;
 		try {
 			response = httpClient.execute(request);
-		} catch (IOException e) {
+			is = response.getEntity().getContent();
+			size = is.read(buffer);
+			lastId = Long.parseLong(new String(buffer, 0, size));
+		} catch (Exception e) {
 			Log.e(TAG, "Http request failed: " + request);
-			return -1;
+			return Long.MAX_VALUE;
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				Log.e(TAG, "Failed to close input stream for http request.");
+			}
 		}
-		//response.getEntity().getContent().
-		return -1;
+		return lastId;
+		
+		
 	}
 }
