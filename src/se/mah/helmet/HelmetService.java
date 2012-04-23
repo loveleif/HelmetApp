@@ -167,26 +167,30 @@ public class HelmetService extends Service {
 	}
 
 	private void start(Intent intent) {
+		alarmActive = true;
+		
 		// Create new trip
 		tripId  = tripDb.insertTrip(new Date().toString());
 		
 		// Start Bluetooth communications
-		BluetoothDevice device = 
+		/*BluetoothDevice device = 
 				BluetoothAdapter
 				.getDefaultAdapter()
 				.getRemoteDevice(
 						intent.getStringExtra(BLUETOOTH_MAC_ADRESS_KEY)
 				);
-		bluetooth.connect(device);
+		bluetooth.connect(device);*/
 		
 		// Start location logging
 		// TODO get constants from settings
-		startService(LocLogService.newStartIntent(
+		Intent locI = LocLogService.newStartIntent(
 				getApplicationContext(), // Context
 				tripId, // Trip id
-				5000, // Min time (ms)
-				100 // Min dist (m)
-			));
+				2000, // Min time (ms)
+				0 // Min dist (m)
+			);
+		Log.d(TAG, "About to start service with intent: " + locI);
+		startService(locI);
 	}
 
 	private void sendAlarm(Intent intent) {

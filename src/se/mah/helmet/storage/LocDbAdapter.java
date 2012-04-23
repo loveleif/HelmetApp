@@ -55,7 +55,8 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
 	 */
 	public long insertLocation(long tripId, Location location) {
-		ContentValues values = new ContentValues(7);
+		ContentValues values = new ContentValues(8);
+		values.put(KEY_TRIP_ID, tripId);
 		values.put(KEY_TIME, location.getTime());
 		values.put(KEY_LAT, location.getLatitude());
 		values.put(KEY_LONG, location.getLongitude());

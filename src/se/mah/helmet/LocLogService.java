@@ -28,10 +28,10 @@ public class LocLogService extends Service {
 
 		// @Override
 		public void onLocationChanged(Location location) {
+			Log.d(TAG, "Logging location " + location.toString());
 			if (location == null)
 				return;
 			db.insertLocation(tripId, location);
-			Log.d(TAG, "Logged " + location.toString());
 		}
 
 		// @Override
@@ -69,7 +69,6 @@ public class LocLogService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 			throws SQLException {
-		super.onStartCommand(intent, flags, startId);
 		Log.d(TAG, "Received start id " + startId + ": " + intent);
 
 		tripId = intent.getLongExtra(KEY_TRIP_ID, -1);

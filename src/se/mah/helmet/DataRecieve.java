@@ -10,7 +10,6 @@ import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Contact;
 import android.database.SQLException;
 import android.location.Location;
-import android.telephony.SmsManager;
 import android.util.Log;
 
 public abstract class DataRecieve {
@@ -99,12 +98,12 @@ public abstract class DataRecieve {
 		
 		for (Contact contact : getAllContacts()) {
 			// VARNING! Kommentera denna raden efter varje test
-			SmsManager.getDefault().sendTextMessage(
+			/*SmsManager.getDefault().sendTextMessage(
 					contact.getPhoneNbr(), 
 					null, // SC adress
 					alarmMsg, 
 					null, 
-					null);
+					null);*/
 			Log.i(TAG, "Sending alarm to " + contact.toString());
 		}
 	}
