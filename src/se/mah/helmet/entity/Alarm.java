@@ -1,5 +1,8 @@
 package se.mah.helmet.entity;
 
+/*
+ * Class representing an accident alarm.
+ */
 public class Alarm {
 	private long id;
 	private short severity;
