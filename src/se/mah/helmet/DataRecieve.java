@@ -83,15 +83,16 @@ public abstract class DataRecieve {
 	
 	public void sendAlarm(Alarm alarm) {
 		Log.i(TAG, "About to send alarm.");
+		// TODO Alarmmeddelandet ska in i res/strings.xml
 		String alarmMsg = "Help me Obi-Wan. You're my only hope.";
 		
 		Location loc = null;
 		try {
 			loc = getLastLocation();
 		} catch (Exception e) {	}
-		
 		if (loc != null)
 			alarmMsg += " Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude();
+		alarmMsg += ". Severity = " + alarm.getSeverity();
 		Log.d(TAG, "Alarm message: " + alarmMsg);
 		// TODO Få in koordinaterna där också, ta tiden
 		// Severity i SMS?

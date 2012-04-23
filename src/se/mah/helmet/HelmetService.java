@@ -173,13 +173,13 @@ public class HelmetService extends Service {
 		tripId  = tripDb.insertTrip(new Date().toString());
 		
 		// Start Bluetooth communications
-		/*BluetoothDevice device = 
+		BluetoothDevice device = 
 				BluetoothAdapter
 				.getDefaultAdapter()
 				.getRemoteDevice(
 						intent.getStringExtra(BLUETOOTH_MAC_ADRESS_KEY)
 				);
-		bluetooth.connect(device);*/
+		bluetooth.connect(device);
 		
 		// Start location logging
 		// TODO get constants from settings
