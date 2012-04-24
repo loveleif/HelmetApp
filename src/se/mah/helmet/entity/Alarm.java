@@ -1,9 +1,11 @@
 package se.mah.helmet.entity;
 
+import se.mah.helmet.LightJson;
+
 /*
  * Class representing an accident alarm.
  */
-public class Alarm {
+public class Alarm implements Jsonable {
 	private long id;
 	private short severity;
 	
@@ -27,5 +29,12 @@ public class Alarm {
 
 	public void setSeverity(short severity) {
 		this.severity = severity;
+	}
+
+	public String toJson() {
+		LightJson jsonBuilder = LightJson.newInstance();
+		jsonBuilder.put("sourceId", String.valueOf(getId()));
+		jsonBuilder.put("severity", String.valueOf(getSeverity()));
+		return jsonBuilder.toJson();
 	}
 }

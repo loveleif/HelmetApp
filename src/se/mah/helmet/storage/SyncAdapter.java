@@ -1,29 +1,15 @@
 package se.mah.helmet.storage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.message.BasicHeader;
-
 import se.mah.helmet.HttpUtil;
 import se.mah.helmet.Prefs;
+import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Trip;
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Service;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.http.AndroidHttpClient;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -75,21 +61,43 @@ public class SyncAdapter extends Service {
 		String resourcePath = domain + "/HelmetServer/users/" + user + "/trips";
 		while (cursor.moveToNext()) {
 			Trip trip = tripDb.getObject(cursor);
-			Log.d(TAG, trip.toJson());
 			HttpUtil.httpPostJson(httpClient, resourcePath, trip.toJson());
+			syncAccData(trip.getId());
+			syncLocData(trip.getId());
+			
+			Log.d(TAG, "Synced Trip with id=" + trip.getId());
+			
 		}
 		tripDb.close();
 		// TODO
 	}
 	
-	private void syncAccData(List<Long> trips) {
-		long lastIdOnServer = getLastIdOnServer(AccDbAdapter.TABLE_ACC);
-		
+	public void syncAlarms() {
+		long lastIdOnServer = getLastIdOnServer(AlarmDbAdapter.TABLE_ALARM);
+		Log.d(TAG, "Alarm lastIdOnServer=" + lastIdOnServer);
+		AlarmDbAdapter alarmDb = new AlarmDbAdapter(getApplicationContext());
+		alarmDb.open();
+		Cursor cursor = alarmDb.getAllSinceId(lastIdOnServer, null);
+		String resourcePath = domain + "/HelmetServer/users/" + user + "/alarms";
+		while (cursor.moveToNext()) {
+			Alarm alarm = alarmDb.getObject(cursor);
+			HttpUtil.httpPostJson(httpClient, resourcePath, alarm.toJson());
+			Log.d(TAG, "Synced Alarm with id=" + alarm.getId());
+		}
+		alarmDb.close();
 		// TODO
 	}
 	
-	private void syncLocData(List<Long> trips) {
+	private void syncAccData(Long tripId) {
 		// TODO
+	}
+	
+	private void syncLocData(Long tripId) {
+		// TODO
+	}
+
+	public void syncContacts() {
+		// TODO Auto-generated method stub
 	}
 	
 	private long getLastIdOnServer(String table) {
@@ -123,10 +131,14 @@ public class SyncAdapter extends Service {
 		@Override
 		public void run() {
 			super.run();
+			syncAlarms();
 			syncTrips();
+			syncContacts();
+			
 			
 			syncThread = null;
 			stopSelf();
 		}
 	}
+
 }
