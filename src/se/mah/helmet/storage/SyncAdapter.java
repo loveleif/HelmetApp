@@ -134,7 +134,8 @@ public class SyncAdapter extends Service {
 	}
 	
 	/**
-	 * Thread used for the sync operations.
+	 * Thread used for the sync operations. (Android does not allow
+	 * to run http requests in the UI thread)
 	 */
 	public class SyncThread extends Thread {
 		@Override
