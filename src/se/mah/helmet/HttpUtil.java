@@ -1,15 +1,18 @@
 package se.mah.helmet;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 
-import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 public class HttpUtil {
@@ -17,8 +20,22 @@ public class HttpUtil {
 	private static final String TAG = HttpUtil.class.getSimpleName();
 
 	public static HttpUriRequest newGetRequest(String path, String acceptContentType) {
-		HttpUriRequest request = new HttpGet(path);
+		HttpGet request = new HttpGet(path);
 		request.addHeader(new BasicHeader("Accept", acceptContentType));
+		return request;
+	}
+	
+	public static HttpUriRequest newJsonPostRequest(String path, String json) {
+		HttpPost request = new HttpPost(path);
+		StringEntity entity = null;
+		try {
+			entity = new StringEntity(json, "UTF8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+		entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+		request.setEntity(entity);
 		return request;
 	}
 	
