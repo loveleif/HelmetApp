@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Class for adding, editing and removing emergency contacts.
+ */
 public class ContactEdit extends Activity {
 	private ContactDbAdapter dbHelper;
 	private EditText name;
