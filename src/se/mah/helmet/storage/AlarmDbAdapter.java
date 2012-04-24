@@ -6,6 +6,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+/**
+ * Database adapter for storing alarm history in a SQLite database.
+ */
 public class AlarmDbAdapter extends DbAdapter<Alarm> {
 	private static final String TAG = AlarmDbAdapter.class.getSimpleName();
 
