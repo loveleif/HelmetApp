@@ -14,6 +14,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+/**
+ * Class used for syncing the android SQLite database with the application server. The
+ * sync is currently 1) one way only, phone -> server 2) does not verify uploaded data.
+ */
 public class SyncAdapter extends Service {
 	private static final String TAG = SyncAdapter.class.getSimpleName();
 
@@ -127,6 +131,9 @@ public class SyncAdapter extends Service {
 		return null;
 	}
 	
+	/**
+	 * Thread used for the sync operations.
+	 */
 	public class SyncThread extends Thread {
 		@Override
 		public void run() {
