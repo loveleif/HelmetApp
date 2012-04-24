@@ -13,8 +13,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * Provides a common SQLiteOpenHelper for all database adapters using the
- * helmet_db database.
+ * Provides a common SQLiteOpenHelper and some common methods for all database 
+ * adapters using the helmet_db database.
  * 
  */
 public abstract class DbAdapter<T> {
@@ -96,16 +96,32 @@ public abstract class DbAdapter<T> {
 		return this;
 	}
 
+	/**
+	 * Close database.
+	 */
 	public void close() {
 		db.close();
 	}
 
+	/**
+	 * Returns the instance of SQLiteDatabase
+	 */
 	protected SQLiteDatabase getDb() {
 		return db;
 	}
 
+	/**
+	 * Returns the name of this adapters table.
+	 * 
+	 * @return table name
+	 */
 	public abstract String getTableName();
 
+	/**
+	 * Returns the name of this adapters primary key column.
+	 * 
+	 * @return primary key column name
+	 */
 	public abstract String getPrimaryKeyColumnName();
 
 	/**
@@ -125,17 +141,29 @@ public abstract class DbAdapter<T> {
 	 * Returns object representation of the row that the specified Cursor points
 	 * at. The Cursor must carry all columns.
 	 * 
-	 * @param cursor
-	 * @return
+	 * @param cursor Cursor to extract object from
+	 * @return extracted object
 	 */
 	public abstract T getObject(Cursor cursor);
 	
+	/**
+	 * Extracts ContentValues from a given object.
+	 * 
+	 * @param object object to extract ContentValues from
+	 * @return extracted ContentValues
+	 */
 	public abstract ContentValues getContentValues(T object);
 
 	public T getObject(long id) {
 		return getObject(get(id));
 	}
 
+	/**
+	 * Returns a Cursor pointing at (not before!) the record with the specified row id.
+	 *
+	 * @param id record row id
+	 * @return Cursor pointing at the record with the specified row id
+	 */
 	public Cursor get(long id) {
 		Cursor cursor = getDb().query(true, getTableName(), null, null, null,
 									  null, null, null, null);
@@ -161,6 +189,11 @@ public abstract class DbAdapter<T> {
 				null, null, limit);
 	}
 
+	/**
+	 * Returns a List of all objects in database.
+	 * 
+	 * @return all objects in database
+	 */
 	public List<T> getAllObjects() {
 		Cursor cursor = getAll();
 		List<T> list = new ArrayList<T>(cursor.getCount());
@@ -169,6 +202,12 @@ public abstract class DbAdapter<T> {
 		return list;
 	}
 
+	/**
+	 * Delete the row with the specified id. Returns true if a record was deleted.
+	 * 
+	 * @param id row id of row to delete
+	 * @return true if a row was deleted
+	 */
 	public boolean delete(long id) {
 		return getDb().delete(getTableName(),
 				getPrimaryKeyColumnName() + "=" + id, null) > 0;
@@ -184,10 +223,22 @@ public abstract class DbAdapter<T> {
 				.query(getTableName(), null, null, null, null, null, null);
 	}
 	
+	/**
+	 * Insert the specified object to the database. Returns the row id of the inserted
+	 * data
+	 * 
+	 * @param object object to insert
+	 * @return row id of the inserted data
+	 */
 	public long insert(T object) {
 		return getDb().insert(getTableName(), null, getContentValues(object));
 	}
 	
+	/**
+	 * Returns the last row of data in it's object form.
+	 * 
+	 * @return object representation of the last row
+	 */
 	public T getLastObject() {
 		Cursor cursor = getDb().query(getTableName(), null,
 				null, null, null, null,

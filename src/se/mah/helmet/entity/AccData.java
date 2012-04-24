@@ -2,7 +2,11 @@ package se.mah.helmet.entity;
 
 import java.util.Date;
 
+/*
+ * Class representing one accelerometer data sample.
+ */
 public class AccData {
+	// Id from android sqlite database
 	private long sourceId = -1;
 	private Date date;
 	private double accX;
