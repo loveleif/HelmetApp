@@ -12,6 +12,8 @@
     <string name="server_user_summary">Please enter your user name</string>
     <string name="server_password_title">Server Password</string>
     <string name="server_password_summary">Please enter your server password</string>
+    <string name="server_port_title">Server Port</string>
+    <string name="server_port_summary">Please enter your server port number</string>
     <string name="acc_logging_enabled_title">Log Accelerometer Data</string>
     <string name="acc_logging_enabled_summary">Check to enable accelerometer data logging</string>
     <string name="acc_sampling_freq_title">Sampling Frequency</string>

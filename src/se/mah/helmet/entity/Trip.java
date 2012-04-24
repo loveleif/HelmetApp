@@ -1,6 +1,8 @@
 package se.mah.helmet.entity;
 
-public class Trip {
+import se.mah.helmet.LightJson;
+
+public class Trip implements Jsonable {
 	private long id;
 	private String name;
 	
@@ -24,5 +26,11 @@ public class Trip {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public String toJson() {
+		LightJson jsonBuilder = LightJson.newInstance();
+		jsonBuilder.put("sourceId", getId().toString());
+		jsonBuilder.put("name", getName());
+		return jsonBuilder.toJson();
+	}
 }

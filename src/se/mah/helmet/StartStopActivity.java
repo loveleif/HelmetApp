@@ -1,17 +1,11 @@
 package se.mah.helmet;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Date;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.message.BasicHeader;
-
+import se.mah.helmet.storage.SyncAdapter;
+import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,12 +40,7 @@ public class StartStopActivity extends Activity {
 			public void onClick(View v) {
 				Runnable test = new Runnable() {
 					public void run() {
-						String get = HttpUtil.httpGet(
-								AndroidHttpClient.newInstance("TestClient"), 
-								"http://10.0.2.2:8080/HelmetServer/users/MrBrown/trips/last/source-id", 
-								"text/plain", 
-								new byte[30]);
-						Log.d(TAG, "http get: " + get);
+						startService(new Intent(getApplicationContext(), SyncAdapter.class));
 					}
 				};
 				Thread t = new Thread(test);
@@ -63,7 +52,10 @@ public class StartStopActivity extends Activity {
 		Button btnAlarmTest = (Button) findViewById(R.id.btnTestAlarm);
 		btnAlarmTest.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), AlarmAcknowledgeActivity.class));
+				TripDbAdapter tripDb = new TripDbAdapter(getApplicationContext());
+				tripDb.open();
+				tripDb.insertTrip("Trip " + new Date().toString());
+				tripDb.close();
 			}
 		});
 

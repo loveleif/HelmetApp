@@ -1,13 +1,15 @@
 package se.mah.helmet;
 
 public class LightJson {
-	StringBuilder json = new StringBuilder('{');
+	StringBuilder json = new StringBuilder();
 	private boolean firstValue = true;
 	private boolean finalized = false;
 	
-	private LightJson() { }
+	private LightJson() {
+		json.append('{');
+	}
 	
-	public static LightJson getInstance() {
+	public static LightJson newInstance() {
 		return new LightJson();
 	}
 	
@@ -23,7 +25,7 @@ public class LightJson {
 		json.append('"');
 		json.append(':');
 		json.append('"');
-		json.append(key);
+		json.append(value);
 		json.append('"');
 		
 		return this;

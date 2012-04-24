@@ -9,62 +9,82 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 
+import se.mah.helmet.HttpUtil;
 import se.mah.helmet.Prefs;
+import se.mah.helmet.entity.Trip;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Service;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class SyncAdapter extends Service {
 	private static final String TAG = SyncAdapter.class.getSimpleName();
-	private final Context context;
-	private final AccountManager accountManager;
-	private final AndroidHttpClient httpClient;
+
+	private AccountManager accountManager;
+	private AndroidHttpClient httpClient;
 	private String domain;
 	private String user;
+	public SyncThread syncThread;
 	private static final String ACCEPT_HEADER_KEY = "Accept";
 	private static final String TYPE_TEXT_PLAIN = "text/plain";
+
 	private byte[] buffer = new byte[8*1024];
 	
-	public SyncAdapter(Context context, boolean autoInitialize) {
-		super(context, autoInitialize);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		domain = prefs.getString(Prefs.SERVER_DOMAIN, null);
-		user = prefs.getString(Prefs.SERVER_USER, null);
+	@Override
+	public void onCreate() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		domain = prefs.getString(Prefs.SERVER_DOMAIN_KEY, null);
+		// TODO Get port from prefs
+		domain += ":8080";
+		user = prefs.getString(Prefs.SERVER_USER_KEY, null);
 		if (domain == null || user == null)
 			// TODO Handle differently
 			throw new RuntimeException("Missing server settings.");
 		domain = "http://" + domain;
-		
-		this.context = context;
-		accountManager = AccountManager.get(context);
+		accountManager = AccountManager.get(getApplicationContext());
 		httpClient = AndroidHttpClient.newInstance("HelmetAppSyncAdapter");
 	}
-
+	
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
-		// TODO Auto-generated method stub
-	}
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (syncThread != null)
+			return START_NOT_STICKY;
 
-	private void syncTrips(String userName) {
+		syncThread = new SyncThread();
+		syncThread.start();
+		return START_STICKY;
+	}
+	
+	private void syncTrips() {
 		long lastIdOnServer = getLastIdOnServer(TripDbAdapter.TABLE_TRIP);
-		TripDbAdapter tripDb = new TripDbAdapter(context);
-		
+		Log.d(TAG, "Trip lastIdOnServer=" + lastIdOnServer);
+		TripDbAdapter tripDb = new TripDbAdapter(getApplicationContext());
+		tripDb.open();
 		Cursor cursor = tripDb.getAllSinceId(lastIdOnServer, null);
+		String resourcePath = domain + "/HelmetServer/users/" + user + "/trips";
+		while (cursor.moveToNext()) {
+			Trip trip = tripDb.getObject(cursor);
+			Log.d(TAG, trip.toJson());
+			HttpUtil.httpPostJson(httpClient, resourcePath, trip.toJson());
+		}
+		tripDb.close();
 		// TODO
 	}
 	
 	private void syncAccData(List<Long> trips) {
 		long lastIdOnServer = getLastIdOnServer(AccDbAdapter.TABLE_ACC);
+		
 		// TODO
 	}
 	
@@ -75,33 +95,38 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private long getLastIdOnServer(String table) {
 		String resourcePath;
 		if (table == TripDbAdapter.TABLE_TRIP)
-			resourcePath = "/users/" + user + "/trips/last/";
+			resourcePath = "/HelmetServer/users/" + user + "/trips/last/source-id";
 		else
 			return -1;
-		HttpUriRequest request = new HttpGet(domain + resourcePath);
-		request.addHeader(new BasicHeader(ACCEPT_HEADER_KEY, TYPE_TEXT_PLAIN));
-		
-		HttpResponse response;
-		InputStream is = null;
-		int size;
+
+		String answer = HttpUtil.httpGet(
+				httpClient, 
+				domain + resourcePath, 
+				TYPE_TEXT_PLAIN, 
+				buffer);
 		long lastId;
 		try {
-			response = httpClient.execute(request);
-			is = response.getEntity().getContent();
-			size = is.read(buffer);
-			lastId = Long.parseLong(new String(buffer, 0, size));
+			lastId = Long.valueOf(answer);
 		} catch (Exception e) {
-			Log.e(TAG, "Http request failed: " + request);
-			return Long.MAX_VALUE;
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				Log.e(TAG, "Failed to close input stream for http request.");
-			}
+			return -1;
 		}
 		return lastId;
-		
-		
+	}
+
+	@Override
+	public IBinder onBind(Intent arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public class SyncThread extends Thread {
+		@Override
+		public void run() {
+			super.run();
+			syncTrips();
+			
+			syncThread = null;
+			stopSelf();
+		}
 	}
 }
