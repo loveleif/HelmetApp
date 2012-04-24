@@ -48,11 +48,10 @@ public class SyncAdapter extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (syncThread != null)
-			return START_NOT_STICKY;
-
-		syncThread = new SyncThread();
-		syncThread.start();
+		if (syncThread == null) {
+			syncThread = new SyncThread();
+			syncThread.start();
+		}
 		return START_STICKY;
 	}
 	
@@ -104,6 +103,9 @@ public class SyncAdapter extends Service {
 		// TODO Auto-generated method stub
 	}
 	
+	/**
+	 * Returns the last row id that is stored at the server.
+	 */
 	private long getLastIdOnServer(String table) {
 		String resourcePath;
 		if (table == TripDbAdapter.TABLE_TRIP)
