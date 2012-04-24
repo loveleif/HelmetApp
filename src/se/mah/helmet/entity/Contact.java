@@ -1,6 +1,8 @@
 package se.mah.helmet.entity;
 
-public class Contact {
+import se.mah.helmet.LightJson;
+
+public class Contact implements Jsonable {
 	private long id;
 	private String name;
 	private String phoneNbr;
@@ -10,10 +12,20 @@ public class Contact {
 		this.name = name;
 		this.phoneNbr = phoneNbr;
 	}
+	
+	public String toJson() {
+		LightJson jsonBuilder = LightJson.newInstance();
+		jsonBuilder.put("sourceId", String.valueOf(getId()));
+		jsonBuilder.put("name", getName());
+		jsonBuilder.put("phoneNbr", getPhoneNbr());
+		return jsonBuilder.toJson();
+	}
+	
 	@Override
 	public String toString() {
 		return "Contact [name=" + name + ", phoneNbr=" + phoneNbr + "]";
 	}
+	
 	public String getName() {
 		return name;
 	}

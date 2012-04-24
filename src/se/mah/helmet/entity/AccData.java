@@ -2,10 +2,13 @@ package se.mah.helmet.entity;
 
 import java.util.Date;
 
+import se.mah.helmet.LightJson;
+import se.mah.helmet.Util;
+
 /*
  * Class representing one accelerometer data sample.
  */
-public class AccData {
+public class AccData implements Jsonable {
 	// Id from android sqlite database
 	private long sourceId = -1;
 	private Date date;
@@ -24,6 +27,16 @@ public class AccData {
 	
 	public AccData(long sourceId, long date, double accX, double accY, double accZ) {
 		this(sourceId, new Date(date), accX, accY, accZ);
+	}
+	
+	public String toJson() {
+		LightJson jsonBuilder = LightJson.newInstance();
+		jsonBuilder.put("sourceId", String.valueOf(getSourceId()));
+		jsonBuilder.put("date", Util.getDateFormatISO8601(getDate()));
+		jsonBuilder.put("accX", String.valueOf(getAccX()));
+		jsonBuilder.put("accY", String.valueOf(getAccY()));
+		jsonBuilder.put("accZ", String.valueOf(getAccZ()));
+		return jsonBuilder.toJson();
 	}
 	
 	public Date getDate() {

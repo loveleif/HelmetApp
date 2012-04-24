@@ -1,5 +1,9 @@
 package se.mah.helmet;
 
+/**
+ * A very basic and light weight json writer.
+ *
+ */
 public class LightJson {
 	StringBuilder json = new StringBuilder();
 	private boolean firstValue = true;

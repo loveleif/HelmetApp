@@ -8,6 +8,7 @@ import se.mah.helmet.LightJson;
 public class Alarm implements Jsonable {
 	private long id;
 	private short severity;
+	// TODO Include position!
 	
 	public Alarm(long id, short severity) {
 		super();
