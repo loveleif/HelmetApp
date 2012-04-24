@@ -15,8 +15,18 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
- * Class used for syncing the android SQLite database with the application server. The
- * sync is currently 1) one way only, phone -> server 2) does not verify uploaded data.
+ * A VERY primitive class for syncing the android SQLite database with
+ * the server.
+ * 
+ * Synchronization is carried out through the servers RESTful interface
+ * (http requests). In it's current form the sync:
+ *    - is one way only, phone -> server
+ *    - don't verify uploaded data
+ *    - only updates location and accelerometer data for new
+ *      trips
+ *    - will fail ugly under a (large) number of circumstances
+ *    - will probably leave the server database in an incomplete state
+ *      after a fail
  */
 public class SyncAdapter extends Service {
 	private static final String TAG = SyncAdapter.class.getSimpleName();
@@ -29,7 +39,7 @@ public class SyncAdapter extends Service {
 	private static final String ACCEPT_HEADER_KEY = "Accept";
 	private static final String TYPE_TEXT_PLAIN = "text/plain";
 
-	private byte[] buffer = new byte[8*1024];
+	private byte[] buffer = new byte[1024];
 	
 	@Override
 	public void onCreate() {
