@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * Preliminary database adapter for storing accelerometer data in a SQLite
+ * Database adapter for storing accelerometer data in a SQLite
  * database.
  */
 public class AccDbAdapter extends DbAdapter<AccData> {
