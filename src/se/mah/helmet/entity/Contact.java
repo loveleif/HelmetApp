@@ -2,6 +2,10 @@ package se.mah.helmet.entity;
 
 import se.mah.helmet.LightJson;
 
+/**
+ * Class representing an emergency contact.
+ *
+ */
 public class Contact implements Jsonable {
 	private long id;
 	private String name;

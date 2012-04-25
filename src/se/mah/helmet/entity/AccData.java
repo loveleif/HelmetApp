@@ -5,7 +5,7 @@ import java.util.Date;
 import se.mah.helmet.LightJson;
 import se.mah.helmet.Util;
 
-/*
+/**
  * Class representing one accelerometer data sample.
  */
 public class AccData implements Jsonable {

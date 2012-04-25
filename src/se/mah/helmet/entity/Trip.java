@@ -2,6 +2,12 @@ package se.mah.helmet.entity;
 
 import se.mah.helmet.LightJson;
 
+/**
+ * Class representing a trip. A trip is a collection of accelerometer data and
+ * positions. This class however only contains the trip id and name (to save 
+ * memory and reduce complexity). The connection between trips and data is 
+ * instead handled in the local SQLite database.
+ */
 public class Trip implements Jsonable {
 	private long sourceId;
 	private String name;

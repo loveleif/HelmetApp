@@ -108,7 +108,7 @@ public class SyncAdapter extends Service {
 		while (cursor.moveToNext()) {
 			Alarm alarm = alarmDb.getObject(cursor);
 			HttpUtil.httpPostJson(httpClient, resourcePath, alarm.toJson(), buffer);
-			Log.d(TAG, "Synced Alarm with id=" + alarm.getId());
+			Log.d(TAG, "Synced Alarm with id=" + alarm.getSourceId());
 		}
 		cursor.close();
 		alarmDb.close();
