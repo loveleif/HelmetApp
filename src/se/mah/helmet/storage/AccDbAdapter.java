@@ -53,9 +53,15 @@ public class AccDbAdapter extends DbAdapter<AccData> {
 	public void insertData(long tripId, double accX, double accY, double accZ) {
 		getDb().execSQL(
 			"INSERT INTO " + TABLE_ACC +
-			" (" + KEY_TRIP_ID + "," + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCX + ")" +
+			" (" + KEY_TRIP_ID + "," + KEY_TIME + "," + KEY_ACCX + "," + KEY_ACCY + "," + KEY_ACCZ + ")" +
 			" VALUES " +
 			" (" + tripId + ",strftime('%s', 'now')," + accX + "," + accY + "," + accZ + ");");
+	}
+	
+	public Cursor getDataForTrip(long tripId) {
+		return getDb().query(getTableName(), null,
+				KEY_TRIP_ID + "=" + tripId, null, null,
+				null, null);
 	}
 
 	@Override

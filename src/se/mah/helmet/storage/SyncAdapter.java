@@ -2,7 +2,9 @@ package se.mah.helmet.storage;
 
 import se.mah.helmet.HttpUtil;
 import se.mah.helmet.Prefs;
+import se.mah.helmet.entity.AccData;
 import se.mah.helmet.entity.Alarm;
+import se.mah.helmet.entity.Position;
 import se.mah.helmet.entity.Trip;
 import android.accounts.AccountManager;
 import android.app.Service;
@@ -75,11 +77,11 @@ public class SyncAdapter extends Service {
 		while (cursor.moveToNext()) {
 			Trip trip = tripDb.getObject(cursor);
 			HttpUtil.httpPostJson(httpClient, resourcePath, trip.toJson());
+			Log.d(TAG, "About to sync acc data.");
 			syncAccData(trip.getId());
+			Log.d(TAG, "About to sync loc data.");
 			syncLocData(trip.getId());
-			
 			Log.d(TAG, "Synced Trip with id=" + trip.getId());
-			
 		}
 		tripDb.close();
 		// TODO
@@ -90,6 +92,7 @@ public class SyncAdapter extends Service {
 		Log.d(TAG, "Alarm lastIdOnServer=" + lastIdOnServer);
 		AlarmDbAdapter alarmDb = new AlarmDbAdapter(getApplicationContext());
 		alarmDb.open();
+
 		Cursor cursor = alarmDb.getAllSinceId(lastIdOnServer, null);
 		String resourcePath = domain + "/HelmetServer/users/" + user + "/alarms";
 		while (cursor.moveToNext()) {
@@ -101,12 +104,30 @@ public class SyncAdapter extends Service {
 		// TODO
 	}
 	
-	private void syncAccData(Long tripId) {
-		// TODO
+	private void syncAccData(long tripId) {
+		AccDbAdapter accDb = new AccDbAdapter(getApplicationContext());
+		accDb.open();
+		Cursor cursor = accDb.getDataForTrip(tripId);
+		String resourcePath = domain + "/HelmetServer/users/" + user + "/trips/" + tripId + "/data/g";
+		AccData data;
+		while (cursor.moveToNext()) {
+			data = accDb.getObject(cursor);
+			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson());
+			Log.d(TAG, "Synced AccData with id=" + data.getSourceId());
+		}
 	}
 	
-	private void syncLocData(Long tripId) {
-		// TODO
+	private void syncLocData(long tripId) {
+		LocDbAdapter locDb = new LocDbAdapter(getApplicationContext());
+		locDb.open();
+		Cursor cursor = locDb.getDataForTrip(tripId);
+		String resourcePath = domain + "/HelmetServer/users/" + user + "/trips/" + tripId + "/data/loc";
+		Position data;
+		while (cursor.moveToNext()) {
+			data = locDb.getObject(cursor);
+			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson());
+			Log.d(TAG, "Synced Loc with id=" + data.getSourceId());
+		}
 	}
 
 	public void syncContacts() {

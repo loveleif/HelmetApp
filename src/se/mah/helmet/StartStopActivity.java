@@ -2,6 +2,10 @@ package se.mah.helmet;
 
 import java.util.Date;
 
+import se.mah.helmet.entity.AccData;
+import se.mah.helmet.entity.Position;
+import se.mah.helmet.storage.AccDbAdapter;
+import se.mah.helmet.storage.LocDbAdapter;
 import se.mah.helmet.storage.SyncAdapter;
 import se.mah.helmet.storage.TripDbAdapter;
 import android.app.Activity;
@@ -59,6 +63,37 @@ public class StartStopActivity extends Activity {
 			}
 		});
 
+		Button btnAddTripTest = (Button) findViewById(R.id.btnTestAddTripData);
+		btnAddTripTest.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				TripDbAdapter tripDb = new TripDbAdapter(getApplicationContext());
+				tripDb.open();
+				long tripId = tripDb.insertTrip("Trip " + new Date().toString());
+				tripDb.close();
+				LocDbAdapter locDb = new LocDbAdapter(getApplicationContext());
+				locDb.open();
+				Position pos;
+				pos = new Position("TestProvider");
+				pos.setLatitude(14);
+				pos.setLongitude(13);
+				pos.setTime(123456789);
+				locDb.insertLocation(tripId, pos);
+				pos = new Position("TestProvider");
+				pos.setLatitude(14);
+				pos.setLongitude(13);
+				pos.setTime(123456789);
+				locDb.insertLocation(tripId, pos);
+				locDb.close();
+				
+				AccDbAdapter accDb = new AccDbAdapter(getApplicationContext());
+				accDb.open();
+				for (int i = 0; i < 4; i++)
+					accDb.insertData(tripId, Math.random() * 16, Math.random() * 16, Math.random() * 16);
+
+			}
+		});
+
+		
 		onOff = (ToggleButton) findViewById(R.id.alarmToggleBtn);
 		onOff.setOnClickListener(new OnOffListener());
 		txtvStatus = (TextView) findViewById(R.id.labelOnOffStatus);

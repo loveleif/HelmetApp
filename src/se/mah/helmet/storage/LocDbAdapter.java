@@ -1,11 +1,12 @@
 package se.mah.helmet.storage;
 
+import se.mah.helmet.entity.Position;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 
-public class LocDbAdapter extends DbAdapter<Location> {
+public class LocDbAdapter extends DbAdapter<Position> {
 	private static final String TAG = LocDbAdapter.class.getSimpleName();
 
 	public static final String TABLE_LOC = "loc";
@@ -55,6 +56,7 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	 *         (see android.database.sqlite.SQLiteDatabase.insert(...))
 	 */
 	public long insertLocation(long tripId, Location location) {
+		// TODO Ta bort
 		ContentValues values = new ContentValues(8);
 		values.put(KEY_TRIP_ID, tripId);
 		values.put(KEY_TIME, location.getTime());
@@ -80,8 +82,8 @@ public class LocDbAdapter extends DbAdapter<Location> {
 	}
 
 	@Override
-	public Location getObject(Cursor cursor) {
-		Location loc = new Location(cursor.getString(cursor.getColumnIndex(KEY_PROVIDER)));
+	public Position getObject(Cursor cursor) {
+		Position loc = new Position(cursor.getString(cursor.getColumnIndex(KEY_PROVIDER)));
 		loc.setAccuracy(cursor.getFloat(cursor.getColumnIndex(KEY_ACCURACY)));
 		loc.setAltitude(cursor.getFloat(cursor.getColumnIndex(KEY_ALT)));
 		loc.setBearing(cursor.getFloat(cursor.getColumnIndex(KEY_BEARING)));
@@ -89,11 +91,12 @@ public class LocDbAdapter extends DbAdapter<Location> {
 		loc.setLatitude(cursor.getFloat(cursor.getColumnIndex(KEY_LAT)));
 		loc.setSpeed(cursor.getFloat(cursor.getColumnIndex(KEY_SPEED)));
 		loc.setTime(cursor.getLong(cursor.getColumnIndex(KEY_TIME)));
+		loc.setSourceId(cursor.getLong(cursor.getColumnIndex(KEY_ROWID)));
 		return loc;
 	}
 
 	@Override
-	public ContentValues getContentValues(Location loc) {
+	public ContentValues getContentValues(Position loc) {
 		ContentValues cv = new ContentValues(7);
 		cv.put(KEY_TIME, loc.getTime());
 		cv.put(KEY_LAT, loc.getLatitude());
@@ -103,6 +106,13 @@ public class LocDbAdapter extends DbAdapter<Location> {
 		cv.put(KEY_SPEED, loc.getSpeed());
 		cv.put(KEY_BEARING, loc.getBearing());
 		cv.put(KEY_PROVIDER, loc.getProvider());
+		cv.put(KEY_ROWID, loc.getSourceId());
 		return cv;
+	}
+
+	public Cursor getDataForTrip(long tripId) {
+		return getDb().query(getTableName(), null,
+				KEY_TRIP_ID + "=" + tripId, null, null,
+				null, null);
 	}
 }
