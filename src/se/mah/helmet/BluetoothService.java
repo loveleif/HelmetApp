@@ -13,7 +13,7 @@ import android.util.Log;
 /**
  * This Service class handles the bluetooth interface to the embedded system.
  * 
- * This class is heavily influenced by sample code from android.google.com, see
+ * This class is partly influenced by sample code from android.google.com, see
  * http://developer.android.com/resources/samples/BluetoothChat
  * 
  */
@@ -68,6 +68,7 @@ public abstract class BluetoothService {
 			connectedThread = null;
 		}
 
+		// Connect
 		connectedThread = new ConnectedThread(socket, BUFFER_SIZE);
 		state = STATE_ON;
 		connectedThread.start();
@@ -96,6 +97,9 @@ public abstract class BluetoothService {
 		connect(lostDevice);
 	}
 	
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		Log.i(TAG, "Disconnecting bluetooth.");
 		state = STATE_OFF;
@@ -112,10 +116,20 @@ public abstract class BluetoothService {
 		}
 	}
 	
+	/**
+	 * Write data to bluetooth.
+	 * @param data data to write
+	 */
 	public void writeData(byte[] data) {
 		connectedThread.write(data);
 	}
 	
+	/**
+	 * Override this method to handle recieved data.
+	 * 
+	 * @param buffer data buffer
+	 * @param size size of read data
+	 */
 	public abstract void recieveData(byte[] buffer, int size);
 
 	/**
@@ -204,13 +218,12 @@ public abstract class BluetoothService {
 			Log.d(TAG, "Listening on Bluetooth channel.");
 			byte[] buffer = new byte[bufferSize];
 			int size = 0;
-			String data;
 			int offset = 0;
 			
 			while (true) {
 				try {
 					// Read from input to buffer until last byte is END_OF_TRANSMISSION
-					
+					// (all messages from the embedded system are terminated with END_OF_TRANSMISSION)
 					offset = 0;
 					do {
 						size = input.read(buffer, offset, buffer.length - offset);
@@ -219,14 +232,6 @@ public abstract class BluetoothService {
 							offset += size;
 					} while (buffer[offset - 1] != END_OF_TRANSMISSION);
 					recieveData(buffer, offset - 1);
-					// TODO Ta bort
-					/*
-					data = new String(buffer, 0, offset - 1);
-					Log.d(TAG, "BT Data: " + data);
-					Intent intent = new Intent(context, DataRecieve.class);
-					intent.putExtra(DataRecieve.JSON_DATA_KEY, data);
-					context.startService(intent);
-					*/
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost(socket.getRemoteDevice());
@@ -250,7 +255,10 @@ public abstract class BluetoothService {
 								+ socket);
 			}
 		}
-
+		
+		/**
+		 * Close connection.
+		 */
 		public void cancel() {
 			try {
 				socket.close();

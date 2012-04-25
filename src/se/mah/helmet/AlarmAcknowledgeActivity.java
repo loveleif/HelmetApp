@@ -1,7 +1,6 @@
 package se.mah.helmet;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -22,18 +21,22 @@ public class AlarmAcknowledgeActivity extends Activity {
 
 	private long startTime;
 	private long time = 0; // Time left in milliseconds
-	private long totalTime = 3000;
-	private long period = 1000;
+	private long totalTime = 3000; // Total time before sending alarm (ms)
+	private long period = 1000; // Time between updating the GUI count down
 	
 	private Button btnCancel;
 	private TextView txtvCountDown;
-	
+
+	// This handler is used to update the countdown in the GUI
+	// and finally sending the alarm.
 	private Handler handler = new Handler();
 	
+	// Called by handler
 	private Runnable update = new Runnable() {
 		public void run() {
 			time = SystemClock.uptimeMillis() - startTime;
 			if (time >= totalTime) {
+				// Send alarm
 				Log.d(TAG, "About to send alarm.");
 				startService(HelmetService.newSendAlarmIntent(
 						getApplicationContext(), 
@@ -41,6 +44,7 @@ public class AlarmAcknowledgeActivity extends Activity {
 						));
 				finish();
 			} else {
+				// Update GUI count down
 				txtvCountDown.setText((totalTime - time) / 1000 + " seconds left to cancel.");
 				handler.postDelayed(update, period);
 			}
@@ -57,6 +61,7 @@ public class AlarmAcknowledgeActivity extends Activity {
 		
 		btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	// Finish without sending alarm if user press the button
                 finish();
             }
         });
