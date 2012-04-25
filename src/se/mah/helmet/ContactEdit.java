@@ -11,6 +11,10 @@ import android.widget.EditText;
 /**
  * Class for adding, editing and removing emergency contacts.
  */
+/**
+ * @author toffe
+ *
+ */
 public class ContactEdit extends Activity {
 	private ContactDbAdapter dbHelper;
 	private EditText name;
@@ -55,6 +59,9 @@ public class ContactEdit extends Activity {
 
 	}
 
+	/**
+	 * Updates the GUI fields
+	 */
 	private void populateFields() {
 		if (rowId == null)
 			return;
@@ -83,6 +90,9 @@ public class ContactEdit extends Activity {
 		populateFields();
 	}
 
+	/**
+	 * Save state.
+	 */
 	private void saveState() {
 		String name = this.name.getText().toString();
 		String phoneNbr = this.phoneNbr.getText().toString();

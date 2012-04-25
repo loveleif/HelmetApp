@@ -14,6 +14,14 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+/**
+ * Activity for adding, editing and deleting emergency contacts.
+ *
+ */
+/**
+ * @author toffe
+ *
+ */
 public class EmergencyContactsActivity extends ListActivity {
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
@@ -34,6 +42,9 @@ public class EmergencyContactsActivity extends ListActivity {
 		registerForContextMenu(getListView());
 	}
 
+	/**
+	 * Fill the list of contacts.
+	 */
 	private void fillData() {
 		Cursor cursor = dbHelper.getAll();
 		startManagingCursor(cursor);
@@ -89,6 +100,9 @@ public class EmergencyContactsActivity extends ListActivity {
 		return super.onContextItemSelected(item);
 	}
 
+	/**
+	 * Create contact.
+	 */
 	private void createContact() {
 		Intent i = new Intent(this, ContactEdit.class);
 		startActivityForResult(i, ACTIVITY_CREATE);

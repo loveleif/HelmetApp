@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * Service to collect and log GPS data.
+ *
+ */
 public class LocLogService extends Service {
 	private static final String TAG = LocLogService.class.getSimpleName();
 	public static final String KEY_MIN_TIME = "minTime";
@@ -28,9 +32,9 @@ public class LocLogService extends Service {
 
 		// @Override
 		public void onLocationChanged(Location location) {
-			Log.d(TAG, "Logging location " + location.toString());
 			if (location == null)
 				return;
+			Log.d(TAG, "Logging location " + location.toString());
 			db.insertLocation(tripId, location);
 		}
 

@@ -13,10 +13,21 @@ public class LightJson {
 		json.append('{');
 	}
 	
+	/**
+	 * Returns a new instance.
+	 * @return new instance
+	 */
 	public static LightJson newInstance() {
 		return new LightJson();
 	}
 	
+	/**
+	 * Adds a new key + value pair to the json String.
+	 * 
+	 * @param key key
+	 * @param value value
+	 * @return reference to this instance
+	 */
 	public LightJson put(CharSequence key, CharSequence value) {
 		if (finalized)
 			throw new RuntimeException("Finalized.");
@@ -35,6 +46,12 @@ public class LightJson {
 		return this;
 	}
 	
+	/**
+	 * Finalizes and returns the json String. After this call put can no longer
+	 * be called.
+	 * 
+	 * @return the json String
+	 */
 	public String toJson() {
 		finalized = true;
 		json.append('}');

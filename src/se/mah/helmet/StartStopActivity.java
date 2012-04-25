@@ -2,7 +2,6 @@ package se.mah.helmet;
 
 import java.util.Date;
 
-import se.mah.helmet.entity.AccData;
 import se.mah.helmet.entity.Position;
 import se.mah.helmet.storage.AccDbAdapter;
 import se.mah.helmet.storage.LocDbAdapter;
@@ -21,6 +20,10 @@ import android.widget.ToggleButton;
 
 // TODO Implementera handler osv
 
+/**
+ * Activity that starts and stops the HelmetService.
+ *
+ */
 public class StartStopActivity extends Activity {
 	public static final String TAG = StartStopActivity.class.getSimpleName();
 	private ToggleButton onOff;
@@ -99,6 +102,10 @@ public class StartStopActivity extends Activity {
 		txtvStatus = (TextView) findViewById(R.id.labelOnOffStatus);
 	}
 
+	/**
+	 * Listener for the ToggleButton that turns HelmetService on/off.
+	 *
+	 */
 	private class OnOffListener implements OnClickListener {
 
 		public void onClick(View v) {

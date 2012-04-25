@@ -20,8 +20,9 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * The main Service for the HelmetApp. Handles sending and recieving bluetooth data, saving
- * data in the local database (via various DbAdapters) and sending alarms.
+ * The main Service for the HelmetApp. Handles sending and recieving bluetooth 
+ * data (through BluetoothService), handling revieved data (with DataRecieve) 
+ * saving data in the local database (via various DbAdapters) and sending alarms.
  * 
  */ 
 public class HelmetService extends Service {
@@ -34,7 +35,7 @@ public class HelmetService extends Service {
 	public static final String JSON_DATA_KEY = "json_data";
 	public static final String ALARM_ID_KEY = "alarm_id";
 	public static final String BLUETOOTH_MAC_ADRESS_KEY = "bt_mac_adress";
-	private static final String TRIP_ID_KEY = "trip_id";
+	public static final String TRIP_ID_KEY = "trip_id";
 
 	// Database access
 	private ContactDbAdapter contactDb;
@@ -45,6 +46,9 @@ public class HelmetService extends Service {
 	
 	// TODO Temporary solution
 	private boolean alarmActive = true;
+	
+	// The current trip id
+	private long tripId = -1;
 	
 	/**
 	 * Handles bluetooth connecting, reading and writing.
@@ -92,9 +96,6 @@ public class HelmetService extends Service {
 			);
 		}
 	};
-
-
-	private long tripId = -1;
 	
 	@Override
 	public void onCreate() {
