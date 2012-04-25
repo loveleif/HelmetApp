@@ -1,7 +1,6 @@
 package se.mah.helmet.entity;
 
 import se.mah.helmet.LightJson;
-import se.mah.helmet.Util;
 import android.location.Location;
 
 public class Position extends Location implements Jsonable {

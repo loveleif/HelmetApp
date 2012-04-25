@@ -67,6 +67,12 @@ public class SyncAdapter extends Service {
 		return START_STICKY;
 	}
 	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		httpClient.close();
+	}
+	
 	private void syncTrips() {
 		long lastIdOnServer = getLastIdOnServer(TripDbAdapter.TABLE_TRIP);
 		Log.d(TAG, "Trip lastIdOnServer=" + lastIdOnServer);
@@ -74,15 +80,19 @@ public class SyncAdapter extends Service {
 		tripDb.open();
 		Cursor cursor = tripDb.getAllSinceId(lastIdOnServer, null);
 		String resourcePath = domain + "/HelmetServer/users/" + user + "/trips";
+		String response;
+		long serverId;
 		while (cursor.moveToNext()) {
 			Trip trip = tripDb.getObject(cursor);
-			HttpUtil.httpPostJson(httpClient, resourcePath, trip.toJson());
+			response = HttpUtil.httpPostJson(httpClient, resourcePath, trip.toJson(), buffer);
+			serverId = Long.valueOf(response);
 			Log.d(TAG, "About to sync acc data.");
-			syncAccData(trip.getId());
+			syncAccData(serverId);
 			Log.d(TAG, "About to sync loc data.");
-			syncLocData(trip.getId());
-			Log.d(TAG, "Synced Trip with id=" + trip.getId());
+			syncLocData(serverId);
+			Log.d(TAG, "Synced Trip with id=" + trip.getSourceId());
 		}
+		cursor.close();
 		tripDb.close();
 		// TODO
 	}
@@ -97,9 +107,10 @@ public class SyncAdapter extends Service {
 		String resourcePath = domain + "/HelmetServer/users/" + user + "/alarms";
 		while (cursor.moveToNext()) {
 			Alarm alarm = alarmDb.getObject(cursor);
-			HttpUtil.httpPostJson(httpClient, resourcePath, alarm.toJson());
+			HttpUtil.httpPostJson(httpClient, resourcePath, alarm.toJson(), buffer);
 			Log.d(TAG, "Synced Alarm with id=" + alarm.getId());
 		}
+		cursor.close();
 		alarmDb.close();
 		// TODO
 	}
@@ -112,9 +123,11 @@ public class SyncAdapter extends Service {
 		AccData data;
 		while (cursor.moveToNext()) {
 			data = accDb.getObject(cursor);
-			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson());
-			Log.d(TAG, "Synced AccData with id=" + data.getSourceId());
+			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson(), buffer);
+			Log.d(TAG, "Synced AccData with id=" + data.getSourceId() + "(tripId=" + tripId + ")");
 		}
+		cursor.close();
+		accDb.close();
 	}
 	
 	private void syncLocData(long tripId) {
@@ -125,9 +138,11 @@ public class SyncAdapter extends Service {
 		Position data;
 		while (cursor.moveToNext()) {
 			data = locDb.getObject(cursor);
-			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson());
+			HttpUtil.httpPostJson(httpClient, resourcePath, data.toJson(), buffer);
 			Log.d(TAG, "Synced Loc with id=" + data.getSourceId());
 		}
+		cursor.close();
+		locDb.close();
 	}
 
 	public void syncContacts() {

@@ -40,13 +40,12 @@ public class HttpUtil {
 		return request;
 	}
 	
-	public static HttpResponse httpPostJson(HttpClient client, String path, String json) {
+	public static String httpPostJson(HttpClient client, String path, String json, byte[] buffer) {
 		HttpUriRequest request = newJsonPostRequest(path, json);
 		
 		HttpResponse response = null;
-		int size = 0;
 		InputStream is = null;
-		byte[] buffer = new byte[128];
+		int size = 0;
 		try {
 			response = client.execute(request);
 			is = response.getEntity().getContent();
@@ -59,7 +58,11 @@ public class HttpUtil {
 				is.close();
 			} catch (Exception e) { }
 		}
-		return response;
+		
+		if (size >= 0)
+			return new String(buffer, 0, size);
+		else
+			return null;
 	}
 	
 	public static String httpGet(HttpClient client, String path, String acceptContentType, byte[] buffer) {

@@ -3,20 +3,20 @@ package se.mah.helmet.entity;
 import se.mah.helmet.LightJson;
 
 public class Trip implements Jsonable {
-	private long id;
+	private long sourceId;
 	private String name;
 	
 	public Trip(long id, String name) {
-		this.id = id;
+		this.sourceId = id;
 		this.name = name;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getSourceId() {
+		return sourceId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setSourceId(Long id) {
+		this.sourceId = id;
 	}
 
 	public String getName() {
@@ -29,7 +29,7 @@ public class Trip implements Jsonable {
 
 	public String toJson() {
 		LightJson jsonBuilder = LightJson.newInstance();
-		jsonBuilder.put("sourceId", getId().toString());
+		jsonBuilder.put("sourceId", getSourceId().toString());
 		jsonBuilder.put("name", getName());
 		return jsonBuilder.toJson();
 	}
