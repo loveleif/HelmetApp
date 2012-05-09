@@ -10,6 +10,7 @@ import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Contact;
 import android.database.SQLException;
 import android.location.Location;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 /**
