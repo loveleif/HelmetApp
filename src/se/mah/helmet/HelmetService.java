@@ -209,6 +209,7 @@ public class HelmetService extends Service {
 
 	private void acknowledgeAlarm(Intent intent) {
 		intent.setClass(getApplicationContext(), AlarmAcknowledgeActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
 

@@ -56,5 +56,14 @@
         android:layout_below="@+id/btnTestAlarm"
         android:layout_marginTop="15dp"
         android:text="Skapa ny trip med data" />
+
+    <Button
+        android:id="@+id/btnCreateAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/btnTestAddTripData"
+        android:layout_marginTop="15dp"
+        android:text="Testlarm" />
 
 </RelativeLayout>
