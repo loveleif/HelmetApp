@@ -21,7 +21,7 @@ public class AlarmAcknowledgeActivity extends Activity {
 
 	private long startTime;
 	private long time = 0; // Time left in milliseconds
-	private long totalTime = 3000; // Total time before sending alarm (ms)
+	private long totalTime = 15000; // Total time before sending alarm (ms)
 	private long period = 1000; // Time between updating the GUI count down
 	
 	private Button btnCancel;
