@@ -2,8 +2,10 @@ package se.mah.helmet;
 
 import java.util.Date;
 
+import se.mah.helmet.entity.Alarm;
 import se.mah.helmet.entity.Position;
 import se.mah.helmet.storage.AccDbAdapter;
+import se.mah.helmet.storage.AlarmDbAdapter;
 import se.mah.helmet.storage.LocDbAdapter;
 import se.mah.helmet.storage.SyncAdapter;
 import se.mah.helmet.storage.TripDbAdapter;
@@ -95,6 +97,21 @@ public class StartStopActivity extends Activity {
 
 			}
 		});
+		
+		Button btnTestLarm = (Button) findViewById(R.id.btnCreateAlarm);
+		btnTestLarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Alarm alarm = new Alarm(-1l, (short) 11);
+				AlarmDbAdapter alarmDb = new AlarmDbAdapter(getApplicationContext());
+				alarmDb.open();
+				long alarmId = alarmDb.insert(alarm);
+				alarmDb.close();
+				Intent intent = new Intent(getApplicationContext(), HelmetService.class);
+				intent.setAction(HelmetService.ACTION_ACKNOWLEDGE_ALARM);
+				startService(intent);
+			}
+		});
+
 
 		
 		onOff = (ToggleButton) findViewById(R.id.alarmToggleBtn);

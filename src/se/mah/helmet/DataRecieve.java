@@ -1,5 +1,7 @@
 package se.mah.helmet;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.json.JSONException;
@@ -24,6 +26,8 @@ public abstract class DataRecieve {
 
 	public static final int RECIEVE_FAIL = -1;
 	public static final int RECIEVE_OK = 1;
+	
+	private DecimalFormat coordFormat = new DecimalFormat("0.0000");
 	
 	/**
 	 * Call this method with data recieved from the embedded system.
@@ -127,7 +131,8 @@ public abstract class DataRecieve {
 			loc = getLastLocation();
 		} catch (Exception e) {	}
 		if (loc != null)
-			alarmMsg += " Lat: " + loc.getLatitude() + ", Long: " + loc.getLongitude();
+			alarmMsg += " Lat: " + coordFormat.format(loc.getLatitude()) 
+					 + ", Long: " + coordFormat.format(loc.getLongitude());
 		alarmMsg += ". Severity = " + alarm.getSeverity();
 		Log.d(TAG, "Alarm message: " + alarmMsg);
 		// TODO Få in koordinaterna där också, ta tiden
