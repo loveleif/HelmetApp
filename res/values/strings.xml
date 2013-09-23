@@ -12,6 +12,8 @@
     <string name="server_user_summary">Please enter your user name</string>
     <string name="server_password_title">Server Password</string>
     <string name="server_password_summary">Please enter your server password</string>
+    <string name="server_port_title">Server Port</string>
+    <string name="server_port_summary">Please enter your server port number</string>
     <string name="acc_logging_enabled_title">Log Accelerometer Data</string>
     <string name="acc_logging_enabled_summary">Check to enable accelerometer data logging</string>
     <string name="acc_sampling_freq_title">Sampling Frequency</string>
@@ -22,5 +24,26 @@
     <string name="pos_min_dist_summary">Please enter the minimum distance in meters between each position data point</string>
     <string name="pos_min_time_title">Minimum Time</string>
     <string name="pos_min_time_summary">Please enter the minimum time between each distance data point</string>
+    <string name="alarm_toggle_btn_on">Alarm ON</string>
+    <string name="alarm_toggle_btn_off">Alarm OFF</string>
+    <string name="on_off_status_default">Status</string>
+    <string name="alarm_prefcat_title">Alarm</string>
+    <string name="alarm_prefcat_summary">Accident alarm preferences</string>
+    <string name="server_prefcat_title">Server</string>
+    <string name="server_prefcat_summary">Application server settings</string>
+    <string name="server_adress_title">Server Adress</string>
+    <string name="server_adress_summary">The IP adress or domain name of the server</string>
+    <string name="accelerometer_prefcat_title">Accelerometer</string>
+    <string name="accelerometer_prefcat_summary">Accererometer data settings</string>
+    <string name="position_prefcat_title">Position</string>
+    <string name="position_prefcat_summary">Settings of the positioning system</string>
+    <string name="no_contacts">No contacts</string>
+    <string name="contacts_menu_insert">New Contact</string>
+    <string name="contacts_menu_delete">Delete Contact</string>
+    <string name="contact_edit_hint_name">Contact Name</string>
+    <string name="contact_edit_hint_phone">SMS Telephone Number</string>
+    <string name="contact_edit_confirm">Confirm</string>
+    <string name="alarm_acknowledge_text">Alarm has gone off!</string>
+    <string name="alarm_acknowledge_btn">Cancel Emergency SMS</string>
 
 </resources>

@@ -6,7 +6,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
+/**
+ * The main Activity of the app. Sets upp the tabs.
+ */
 public class HelmetAppActivity extends TabActivity {
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

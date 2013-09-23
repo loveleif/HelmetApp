@@ -5,6 +5,11 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -23,7 +28,14 @@
         <activity android:name="StartStopActivity"></activity>
         <activity android:name="SettingsActivity"></activity>
         <activity android:name="EmergencyContactsActivity"></activity>
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name="ContactEdit"></activity>
+        <service android:name="BluetoothService">
+        </service>
+        <activity android:name="AlarmAcknowledgeActivity"></activity>
+        <service android:name="DataRecieve"></service>
+        <service android:name="HelmetService"></service>
+        <service android:name="LocLogService"></service>
+        <service android:name=".storage.SyncAdapter"></service>
     </application>
 
 </manifest>
